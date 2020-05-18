@@ -1,0 +1,16 @@
+.custom-text-input {
+  padding: 11px 16px;
+  border: 2px solid var(--gray-lightest);
+  border-radius: 8px;
+  font-size: 16px;
+  width: 100%;
+  transition: all ease 150ms;
+}
+
+.custom-text-input.active {
+  border-bottom: 1px solid var(--accent-default);
+}
+
+.custom-text-input:valid {
+  color: var(--black);
+}

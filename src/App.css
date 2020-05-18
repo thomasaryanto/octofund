@@ -1,7 +1,7 @@
 :root {
-  --accent-default: #3c64b1;
-  --accent-dark: #1e4693;
-  --accent-light: #5a82cf;
+  --accent-default: #da344d;
+  --accent-dark: #d91e36;
+  --accent-light: #ec5766;
   --gray-lightest: #f4f5f4;
   --gray-divider: #e2e5e6;
   --gray-default: #c3cbcd;
@@ -26,6 +26,7 @@ html {
 
 body {
   font-family: Work Sans, Arial, sans-serif !important;
+  background-color: #f4f5f4 !important;
 }
 
 h1 {
@@ -133,6 +134,10 @@ section {
   min-height: 100vh;
 }
 
+section.header {
+  min-height: 30vh !important;
+}
+
 section.image {
   background: linear-gradient(rgba(255, 0, 0, 0.45), rgba(255, 0, 0, 0.45)),
     url(assets/images/bg.png);
@@ -140,6 +145,10 @@ section.image {
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+}
+
+.bg-color {
+  background-color: var(--accent-light) !important;
 }
 
 .white {
