@@ -3,6 +3,7 @@ import React from "react";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
+import CustomText from "../../components/CustomText/CustomText";
 
 class Product extends React.Component {
   render() {
@@ -17,6 +18,25 @@ class Product extends React.Component {
         <section>
           <div className="w-100 p-5">
             <div className="row">
+              <div className="col-12">
+                <div class="card shadow-sm mb-4">
+                  <div className="card-body d-flex p-3">
+                    <div className="col-md-6">
+                      <CustomText className="small" placeholder="Pencarian.." />
+                    </div>
+                    <div className="col-md-6 d-flex">
+                      <div className="ml-auto">
+                        <CustomButton type="contained" className="small">
+                          ☰ Filter
+                        </CustomButton>
+                        <CustomButton type="contained" className="small ml-2">
+                          ↕ Sort
+                        </CustomButton>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div className="col-md-4 p-3">
                 <div class="card shadow">
                   <div class="card-header">
