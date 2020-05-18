@@ -33,14 +33,14 @@
 }
 
 .custom-btn-contained {
-  border: 1px solid var(--accent-default);
-  background-color: var(--accent-default);
+  border: 1px solid var(--accent-light);
+  background-color: var(--accent-light);
   color: white;
 }
 
 .custom-btn-contained:hover {
-  border: 1px solid var(--accent-light);
-  background-color: var(--accent-light);
+  border: 1px solid var(--accent-default);
+  background-color: var(--accent-default);
   color: white;
 }
 

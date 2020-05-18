@@ -20,7 +20,7 @@ function App() {
       <NavigationBar />
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/product" component={Product} />
+        <Route exact path="/products" component={Product} />
       </Switch>
       <Footer />
     </>
