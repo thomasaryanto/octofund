@@ -34,7 +34,7 @@ class Home extends React.Component {
           <div className="w-100 p-5">
             <h2>Kalkulator Investasi</h2>
             <div className="row">
-              <div className="col-md-4 pt-3">
+              <div className="col-lg-4 pt-3">
                 <p className="pt-2 pb-2">Jika kamu mulai</p>
                 <CustomText />
                 <p className="pt-2 pb-2">untuk investasi awal</p>
@@ -43,15 +43,15 @@ class Home extends React.Component {
                 <CustomText />
                 <p className="pt-2 pb-2">setiap bulan</p>
               </div>
-              <div className="col-md-8 pt-3 pl-md-5">
-                <p className="pt-2 pb-2 pl-md-5">
+              <div className="col-lg-8 pt-3 pl-lg-5">
+                <p className="pt-2 pb-2 pl-lg-5">
                   Dalam waktu xx tahun kamu bisa mendapatkan
                 </p>
                 <br />
                 <br />
                 <br />
                 <br />
-                <p className="pl-md-5">
+                <p className="pl-lg-5">
                   <b> -- disini nanti ada chart --</b>
                 </p>
               </div>
@@ -64,7 +64,7 @@ class Home extends React.Component {
             <h2 className="white">Artikel Investasi</h2>
 
             <div className="row">
-              <div className="col-md-4 pt-3">
+              <div className="col-lg-4 pt-3">
                 <div class="card">
                   <div class="card-header d-flex">
                     <p class="mr-auto">Promosi</p>
@@ -74,13 +74,13 @@ class Home extends React.Component {
                   </div>
                   <div class="card-body">
                     <div className="row">
-                      <div className="col-md-3 d-none d-md-block">
+                      <div className="col-lg-3 d-none d-lg-block">
                         <img
                           src="https://picsum.photos/75"
                           alt="Contoh Gambar"
                         />
                       </div>
-                      <div className="col-md-9">
+                      <div className="col-lg-9">
                         <h5 class="card-title">
                           Special title treatment with supporting text
                         </h5>
@@ -89,13 +89,13 @@ class Home extends React.Component {
                     </div>
                     <hr />
                     <div className="row">
-                      <div className="col-md-3 d-none d-md-block">
+                      <div className="col-lg-3 d-none d-lg-block">
                         <img
                           src="https://picsum.photos/75"
                           alt="Contoh Gambar"
                         />
                       </div>
-                      <div className="col-md-9">
+                      <div className="col-lg-9">
                         <h5 class="card-title">
                           Special title treatment with supporting text
                         </h5>
@@ -104,13 +104,13 @@ class Home extends React.Component {
                     </div>
                     <hr />
                     <div className="row">
-                      <div className="col-md-3 d-none d-md-block">
+                      <div className="col-lg-3 d-none d-lg-block">
                         <img
                           src="https://picsum.photos/75"
                           alt="Contoh Gambar"
                         />
                       </div>
-                      <div className="col-md-9">
+                      <div className="col-lg-9">
                         <h5 class="card-title">
                           Special title treatment with supporting text
                         </h5>
@@ -121,7 +121,7 @@ class Home extends React.Component {
                 </div>
               </div>
 
-              <div className="col-md-4 pt-3">
+              <div className="col-lg-4 pt-3">
                 <div class="card">
                   <div class="card-header d-flex">
                     <p class="mr-auto">Tips dan Trik</p>
@@ -178,7 +178,7 @@ class Home extends React.Component {
                 </div>
               </div>
 
-              <div className="col-md-4 pt-3">
+              <div className="col-lg-4 pt-3">
                 <div class="card">
                   <div class="card-header d-flex">
                     <p class="mr-auto">Paling Populer</p>

@@ -18,36 +18,47 @@ class Product extends React.Component {
         <section>
           <div className="w-100 p-5">
             <div className="row">
-              <div className="col-12">
+              <div className="col-lg-12">
                 <div class="card shadow-sm mb-4">
-                  <div className="card-body d-flex p-3">
-                    <div className="col-md-6">
-                      <CustomText className="small" placeholder="Pencarian.." />
-                    </div>
-                    <div className="col-md-6 d-flex">
-                      <div className="ml-auto">
-                        <CustomButton type="contained" className="small">
-                          ☰ Filter
-                        </CustomButton>
-                        <CustomButton type="contained" className="small ml-2">
-                          ↕ Sort
-                        </CustomButton>
+                  <div className="card-body p-3">
+                    <div className="row">
+                      <div className="col-lg-6">
+                        <CustomText
+                          className="small"
+                          placeholder="Pencarian.."
+                        />
+                      </div>
+                      <div className="col-lg-6 d-flex pt-3 pt-lg-0">
+                        <div className="ml-lg-auto">
+                          <CustomButton type="contained" className="small">
+                            ☰ Filter
+                          </CustomButton>
+                          <CustomButton type="contained" className="small ml-2">
+                            ↕ Sort
+                          </CustomButton>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="col-md-4 p-3">
+              <div className="col-lg-4 p-3">
                 <div class="card shadow">
                   <div class="card-header">
                     <p>TRIM Dana Tetap</p>
                     <p className="small">PT. Trimegah Asset Management</p>
                   </div>
-                  <div className="card-body d-flex">
-                    <p className="pt-3 small">-- tempat chart --</p>
-                    <div className="ml-auto">
-                      <h5>Rp 1.625,12</h5>
-                      <p className="small text-success">+1,23%</p>
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-lg-7">
+                        <p className="pt-3 small">-- tempat chart --</p>
+                      </div>
+                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
+                        <div className="ml-lg-auto">
+                          <h5>Rp 1.625,12</h5>
+                          <p className="small text-success">+1,23%</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <a href="#buy" className="text-decoration-none">
@@ -58,17 +69,23 @@ class Product extends React.Component {
                 </div>
               </div>
 
-              <div className="col-md-4 p-3">
+              <div className="col-lg-4 p-3">
                 <div class="card shadow">
                   <div class="card-header">
                     <p>TRIM Dana Tetap 2</p>
                     <p className="small">PT. Trimegah Asset Management</p>
                   </div>
-                  <div className="card-body d-flex">
-                    <p className="pt-3 small">-- tempat chart --</p>
-                    <div className="ml-auto">
-                      <h5>Rp 1.850,31</h5>
-                      <p className="small text-danger">-2,35%</p>
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-lg-7">
+                        <p className="pt-3 small">-- tempat chart --</p>
+                      </div>
+                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
+                        <div className="ml-lg-auto">
+                          <h5>Rp 1.865,33</h5>
+                          <p className="small text-danger">-2,35%</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <a href="#buy" className="text-decoration-none">
@@ -79,17 +96,23 @@ class Product extends React.Component {
                 </div>
               </div>
 
-              <div className="col-md-4 p-3">
+              <div className="col-lg-4 p-3">
                 <div class="card shadow">
                   <div class="card-header">
                     <p>TRIM Dana Tetap 3</p>
                     <p className="small">PT. Trimegah Asset Management</p>
                   </div>
-                  <div className="card-body d-flex">
-                    <p className="pt-3 small">-- tempat chart --</p>
-                    <div className="ml-auto">
-                      <h5>Rp 2.189,15</h5>
-                      <p className="small text-success">+4,23%</p>
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-lg-7">
+                        <p className="pt-3 small">-- tempat chart --</p>
+                      </div>
+                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
+                        <div className="ml-lg-auto">
+                          <h5>Rp 2.139,66</h5>
+                          <p className="small text-success">+4,13%</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <a href="#buy" className="text-decoration-none">
@@ -100,17 +123,23 @@ class Product extends React.Component {
                 </div>
               </div>
 
-              <div className="col-md-4 p-3">
+              <div className="col-lg-4 p-3">
                 <div class="card shadow">
                   <div class="card-header">
                     <p>TRIM Dana Tetap</p>
                     <p className="small">PT. Trimegah Asset Management</p>
                   </div>
-                  <div className="card-body d-flex">
-                    <p className="pt-3 small">-- tempat chart --</p>
-                    <div className="ml-auto">
-                      <h5>Rp 1.625,12</h5>
-                      <p className="small text-success">+1,23%</p>
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-lg-7">
+                        <p className="pt-3 small">-- tempat chart --</p>
+                      </div>
+                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
+                        <div className="ml-lg-auto">
+                          <h5>Rp 1.625,12</h5>
+                          <p className="small text-success">+1,23%</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <a href="#buy" className="text-decoration-none">
@@ -121,17 +150,23 @@ class Product extends React.Component {
                 </div>
               </div>
 
-              <div className="col-md-4 p-3">
+              <div className="col-lg-4 p-3">
                 <div class="card shadow">
                   <div class="card-header">
                     <p>TRIM Dana Tetap 2</p>
                     <p className="small">PT. Trimegah Asset Management</p>
                   </div>
-                  <div className="card-body d-flex">
-                    <p className="pt-3 small">-- tempat chart --</p>
-                    <div className="ml-auto">
-                      <h5>Rp 1.850,31</h5>
-                      <p className="small text-danger">-2,35%</p>
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-lg-7">
+                        <p className="pt-3 small">-- tempat chart --</p>
+                      </div>
+                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
+                        <div className="ml-lg-auto">
+                          <h5>Rp 1.865,33</h5>
+                          <p className="small text-danger">-2,35%</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <a href="#buy" className="text-decoration-none">
@@ -142,17 +177,23 @@ class Product extends React.Component {
                 </div>
               </div>
 
-              <div className="col-md-4 p-3">
+              <div className="col-lg-4 p-3">
                 <div class="card shadow">
                   <div class="card-header">
                     <p>TRIM Dana Tetap 3</p>
                     <p className="small">PT. Trimegah Asset Management</p>
                   </div>
-                  <div className="card-body d-flex">
-                    <p className="pt-3 small">-- tempat chart --</p>
-                    <div className="ml-auto">
-                      <h5>Rp 2.189,15</h5>
-                      <p className="small text-success">+4,23%</p>
+                  <div className="card-body">
+                    <div className="row">
+                      <div className="col-lg-7">
+                        <p className="pt-3 small">-- tempat chart --</p>
+                      </div>
+                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
+                        <div className="ml-lg-auto">
+                          <h5>Rp 2.139,66</h5>
+                          <p className="small text-success">+4,13%</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <a href="#buy" className="text-decoration-none">
