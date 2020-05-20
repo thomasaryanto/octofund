@@ -13,6 +13,7 @@ import Footer from "./views/components/Footer/Footer";
 //screens
 import Home from "./views/screens/Home/Home";
 import Product from "./views/screens/Product/Product";
+import Detail from "./views/screens/Detail/Detail";
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
       <NavigationBar />
       <Switch>
         <Route exact path="/" component={Home} />
-        <Route exact path="/products" component={Product} />
+        <Route exact path="/product" component={Product} />
+        <Route exact path="/detail" component={Detail} />
       </Switch>
       <Footer />
     </>

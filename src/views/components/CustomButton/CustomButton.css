@@ -18,6 +18,15 @@
   font-size: 13px;
   line-height: 12px;
 }
+
+.custom-btn.full {
+  width: 100% !important;
+}
+
+.custom-btn.borderless {
+  border: 0px !important;
+}
+
 .custom-btn:hover {
   cursor: pointer;
 }

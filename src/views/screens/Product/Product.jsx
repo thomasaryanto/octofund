@@ -1,5 +1,6 @@
 //libraries
 import React from "react";
+import { Link } from "react-router-dom";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -61,11 +62,11 @@ class Product extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <a href="#buy" className="text-decoration-none">
+                  <Link to="/detail">
                     <div class="card-footer bg-primary text-center white">
                       <strong>BELI</strong>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -88,11 +89,11 @@ class Product extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <a href="#buy" className="text-decoration-none">
+                  <Link to="/detail">
                     <div class="card-footer bg-primary text-center white">
                       <strong>BELI</strong>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -115,11 +116,11 @@ class Product extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <a href="#buy" className="text-decoration-none">
+                  <Link to="/detail">
                     <div class="card-footer bg-primary text-center white">
                       <strong>BELI</strong>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -142,11 +143,11 @@ class Product extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <a href="#buy" className="text-decoration-none">
+                  <Link to="/detail">
                     <div class="card-footer bg-primary text-center white">
                       <strong>BELI</strong>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -169,11 +170,11 @@ class Product extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <a href="#buy" className="text-decoration-none">
+                  <Link to="/detail">
                     <div class="card-footer bg-primary text-center white">
                       <strong>BELI</strong>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
 
@@ -196,11 +197,11 @@ class Product extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <a href="#buy" className="text-decoration-none">
+                  <Link to="/detail">
                     <div class="card-footer bg-primary text-center white">
                       <strong>BELI</strong>
                     </div>
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

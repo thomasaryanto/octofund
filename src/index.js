@@ -6,10 +6,14 @@ import * as serviceWorker from "./serviceWorker";
 
 import { BrowserRouter } from "react-router-dom";
 
+import Scroll from "./views/components/Scroll/Scroll";
+
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <Scroll>
+        <App />
+      </Scroll>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")

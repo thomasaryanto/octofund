@@ -1,5 +1,6 @@
 //libraries
 import React from "react";
+import { Link } from "react-router-dom";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -20,9 +21,11 @@ class Home extends React.Component {
               semudah belanja online!
             </p>
             <br />
-            <CustomButton type="contained" className="bg-primary">
-              Daftar Sekarang
-            </CustomButton>
+            <Link to="/product">
+              <CustomButton type="contained" className="bg-primary borderless">
+                Daftar Sekarang
+              </CustomButton>
+            </Link>
 
             <a class="btn-scroll" href="#more">
               <img alt="More" src={arrow} />
