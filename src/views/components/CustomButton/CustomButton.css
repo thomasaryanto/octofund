@@ -27,6 +27,13 @@
   border: 0px !important;
 }
 
+.custom-btn.block {
+  display: block !important;
+  width: 100% !important;
+  margin-top: 15px !important;
+  margin-bottom: 15px !important;
+}
+
 .custom-btn:hover {
   cursor: pointer;
 }

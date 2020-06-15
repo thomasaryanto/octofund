@@ -14,6 +14,7 @@ import Footer from "./views/components/Footer/Footer";
 import Home from "./views/screens/Home/Home";
 import Product from "./views/screens/Product/Product";
 import Detail from "./views/screens/Detail/Detail";
+import Profile from "./views/screens/Profile/Profile";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route exact path="/" component={Home} />
         <Route exact path="/product" component={Product} />
         <Route exact path="/detail" component={Detail} />
+        <Route exact path="/profile" component={Profile} />
       </Switch>
       <Footer />
     </>
