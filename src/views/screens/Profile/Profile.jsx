@@ -17,7 +17,7 @@ class Profile extends React.Component {
                 <div className="card-body">
                   <h5>Thomas Aryanto</h5>
                   <p className="pt-2 text-muted">Total investasi</p>
-                  <h5>Rp.2.000.000</h5>
+                  <h5>Rp.2.120.000</h5>
                   <p className="pt-2 text-muted">Total imbal hasil</p>
                   <h5 className="pb-2">
                     Rp.120.000 <small>(+1,8%)</small>
