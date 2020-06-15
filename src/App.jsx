@@ -16,6 +16,7 @@ import Product from "./views/screens/Product/Product";
 import Detail from "./views/screens/Detail/Detail";
 import Profile from "./views/screens/Profile/Profile";
 import Portfolio from "./views/screens/Portfolio/Portfolio";
+import Transaction from "./views/screens/Transaction/Transaction";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route exact path="/detail" component={Detail} />
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/portfolio" component={Portfolio} />
+        <Route exact path="/transaction" component={Transaction} />
       </Switch>
       <Footer />
     </>
