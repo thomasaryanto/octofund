@@ -138,7 +138,7 @@ section.header {
   min-height: 30vh !important;
 }
 
-section.image {
+.image {
   background: linear-gradient(rgba(255, 0, 0, 0.45), rgba(255, 0, 0, 0.45)),
     url(assets/images/bg.png);
   background-attachment: fixed;

@@ -5,16 +5,23 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 
 import { BrowserRouter } from "react-router-dom";
-
 import Scroll from "./views/components/Scroll/Scroll";
+
+// redux
+import { Provider } from "react-redux";
+import reducers from "./redux/reducers";
+import { createStore, applyMiddleware } from "redux";
+import ReduxThunk from "redux-thunk";
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Scroll>
-        <App />
-      </Scroll>
-    </BrowserRouter>
+    <Provider store={createStore(reducers, {}, applyMiddleware(ReduxThunk))}>
+      <BrowserRouter>
+        <Scroll>
+          <App />
+        </Scroll>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById("root")
 );

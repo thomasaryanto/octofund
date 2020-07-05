@@ -12,7 +12,7 @@ class Product extends React.Component {
       <div className="container-fluid p-0">
         <section className="d-flex align-items-center text-center header image">
           <div className="w-100 p-5">
-            <h1 className="white">Produk Reksa Dana</h1>
+            <h1 className="white mt-5">Produk Reksa Dana</h1>
             <p className="white">Pilih reksa dana impianmu sekarang!</p>
           </div>
         </section>
