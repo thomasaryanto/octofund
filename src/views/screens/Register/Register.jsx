@@ -90,7 +90,7 @@ class Register extends React.Component {
     );
   };
 
-  registerHandler = () => {
+  registerBtnHandler = () => {
     if (!this.sigPad.isEmpty()) {
       this.setState(
         {
@@ -489,7 +489,7 @@ class Register extends React.Component {
                   <CustomButton
                     type="contained"
                     className="bg-primary borderless"
-                    onClick={this.registerHandler}
+                    onClick={this.registerBtnHandler}
                   >
                     Daftar Sekarang
                   </CustomButton>
