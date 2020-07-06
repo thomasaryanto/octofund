@@ -32,6 +32,13 @@ class Register extends React.Component {
       address: "testing",
       signature: "testing",
     },
+    bankForm: {
+      accountNumber: "",
+      holderName: "",
+      bank: {
+        id: 1,
+      },
+    },
     photoForm: {
       identityPhoto: "",
       selfiePhoto: "",
@@ -110,6 +117,7 @@ class Register extends React.Component {
               ...this.state.photoForm,
               user: {
                 ...this.state.generalForm,
+                bankAccounts: [this.state.bankForm],
               },
             };
             Axios.post(`${API_URL}/users/member`, userData)
@@ -236,6 +244,7 @@ class Register extends React.Component {
                       </Card.Body>
                     </Accordion.Collapse>
                   </Card>
+
                   <Card>
                     <Accordion.Toggle as={Card.Header} eventKey="1">
                       <strong>Data Diri Nasabah</strong>
@@ -425,10 +434,63 @@ class Register extends React.Component {
 
                   <Card>
                     <Accordion.Toggle as={Card.Header} eventKey="2">
-                      <strong>Syarat & Ketentuan</strong>
+                      <strong>Data Rekening Bank </strong>
                       <p class="float-right">▼</p>
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey="2">
+                      <Card.Body>
+                        <div className="row">
+                          <div className="col-lg-6">
+                            <strong className="text-muted small">
+                              No Rekening
+                            </strong>
+                            <CustomText
+                              className="mb-3"
+                              value={this.state.bankForm.accountNumber}
+                              onChange={(e) =>
+                                this.inputHandler(
+                                  e,
+                                  "accountNumber",
+                                  "bankForm"
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="col-lg-6">
+                            <strong className="text-muted small">
+                              Nama Pemilik
+                            </strong>
+                            <CustomText
+                              className="mb-3"
+                              value={this.state.bankForm.holderName}
+                              onChange={(e) =>
+                                this.inputHandler(e, "holderName", "bankForm")
+                              }
+                            />
+                          </div>
+                        </div>
+                        <div className="row">
+                          <div className="col-lg-12">
+                            <strong className="text-muted small">
+                              Pilih Bank
+                            </strong>
+                            <CustomText
+                              className="mb-3"
+                              type="text"
+                              value={this.state.bankForm.bank.id}
+                            />
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Accordion.Collapse>
+                  </Card>
+
+                  <Card>
+                    <Accordion.Toggle as={Card.Header} eventKey="3">
+                      <strong>Syarat & Ketentuan</strong>
+                      <p class="float-right">▼</p>
+                    </Accordion.Toggle>
+                    <Accordion.Collapse eventKey="3">
                       <Card.Body>
                         <div className="row">
                           <div className="col-lg-6">
