@@ -3,6 +3,7 @@ import "./CustomText.css";
 
 type TextFieldProps = {
   focused?: boolean;
+  disabled?: boolean;
   className?: string;
   placeholder?: string;
   onChange?: any;
@@ -19,6 +20,7 @@ class TextField extends React.Component<TextFieldProps> {
         placeholder={this.props.placeholder}
         type={this.props.type || "text"}
         className={`custom-text-input ${this.props.className}`}
+        disabled={this.props.disabled}
       />
     );
   }

@@ -26,6 +26,7 @@ import Register from "./views/screens/Register/Register";
 import Login from "./views/screens/Login/Login";
 import Verify from "./views/screens/Verify/Verify";
 import ResetPassword from "./views/screens/ResetPassword/ResetPassword";
+import StaffKyc from "./views/screens/Staff/StaffKyc";
 
 const cookieObj = new Cookie();
 
@@ -55,6 +56,8 @@ class App extends React.Component {
             <Route exact path="/login" component={Login} />
             <Route exact path="/verify/:token" component={Verify} />
             <Route exact path="/reset/:token" component={ResetPassword} />
+
+            <Route exact path="/staff/kyc" component={StaffKyc} />
           </Switch>
           {/* <Footer /> */}
         </>

@@ -5,6 +5,7 @@ import SignatureCanvas from "react-signature-canvas";
 import { Redirect } from "react-router-dom";
 import swal from "sweetalert";
 import Axios from "axios";
+import Select from "react-select";
 import { API_URL } from "../../../constants/API";
 
 //components
@@ -35,9 +36,7 @@ class Register extends React.Component {
     bankForm: {
       accountNumber: "",
       holderName: "",
-      bank: {
-        id: 1,
-      },
+      bank: null,
     },
     photoForm: {
       identityPhoto: "",
@@ -47,10 +46,37 @@ class Register extends React.Component {
       identityPhoto: "",
       selfiePhoto: "",
     },
+    bankList: {},
     isSuccess: false,
   };
 
   sigPad = {};
+
+  componentDidMount() {
+    Axios.get(`${API_URL}/banks`)
+      .then((res) => {
+        console.log(
+          res.data.map(({ id, name }) => ({
+            id,
+            name,
+          }))
+        );
+        this.setState({
+          bankList: res.data.map(({ id, name }) => ({
+            id,
+            name,
+          })),
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        const errorMessage = err.response
+          ? err.response.data.errors.join("\n")
+          : err.message;
+
+        swal("Terjadi kesalahan!", errorMessage, "error");
+      });
+  }
 
   signatureClear = () => {
     this.sigPad.clear();
@@ -98,6 +124,7 @@ class Register extends React.Component {
   };
 
   registerBtnHandler = () => {
+    console.log(this.state);
     if (!this.sigPad.isEmpty()) {
       this.setState(
         {
@@ -147,6 +174,19 @@ class Register extends React.Component {
     } else {
       swal("Terjadi kesalahan!", "Kamu belum melakukan tanda tangan!", "error");
     }
+  };
+
+  bankListHandler = (e) => {
+    console.log(this.state);
+    this.setState({
+      bankForm: {
+        ...this.state.bankForm,
+        bank: {
+          id: e.id,
+          name: e.name,
+        },
+      },
+    });
   };
 
   testButton = () => {
@@ -458,11 +498,11 @@ class Register extends React.Component {
                           </div>
                           <div className="col-lg-6">
                             <strong className="text-muted small">
-                              Nama Pemilik
+                              Nama Pemegang
                             </strong>
                             <CustomText
                               className="mb-3"
-                              value={this.state.bankForm.holderName}
+                              value={this.state.generalForm.holderName}
                               onChange={(e) =>
                                 this.inputHandler(e, "holderName", "bankForm")
                               }
@@ -474,10 +514,20 @@ class Register extends React.Component {
                             <strong className="text-muted small">
                               Pilih Bank
                             </strong>
-                            <CustomText
+                            {/* <CustomText
                               className="mb-3"
                               type="text"
                               value={this.state.bankForm.bank.id}
+                            /> */}
+
+                            <Select
+                              menuPortalTarget={document.querySelector("body")}
+                              value={this.state.bankForm.bank}
+                              getOptionValue={(option) => option.id}
+                              getOptionLabel={(option) => option.name}
+                              onChange={this.bankListHandler}
+                              options={this.state.bankList}
+                              placeholder="Pilih Bank..."
                             />
                           </div>
                         </div>
