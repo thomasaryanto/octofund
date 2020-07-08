@@ -9,6 +9,7 @@ import Pagination from "react-js-pagination";
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
+import UserCard from "../../components/Cards/UserCard";
 
 class StaffKyc extends React.Component {
   state = {
@@ -43,7 +44,6 @@ class StaffKyc extends React.Component {
   };
 
   handlePageChange = (pageNumber) => {
-    console.log(`active page is ${pageNumber}`);
     this.setState({ activePage: pageNumber }, () => {
       this.getUserListData(this.state.activePage);
     });
@@ -83,37 +83,46 @@ class StaffKyc extends React.Component {
   };
 
   renderUsers = () => {
-    return this.state.userData.map(
-      ({ id, member, name, email, selfiePhoto }) => {
-        return (
-          <Card className="h-100 mt-3">
-            <Card.Body className={`d-flex align-items-center`}>
-              <div className="col-lg-1">
-                <p>{selfiePhoto}</p>
-              </div>
-              <div className="col-lg-8">
-                <p className="text-muted">{member.identityNumber}</p>
-                <strong>{name}</strong>
-                <p className="text-muted">{email}</p>
-              </div>
-              <div className="col-lg-3">
-                <div className="float-right">
-                  <CustomButton
-                    type="contained"
-                    className="small bg-primary borderless ml-2"
-                    onClick={() => {
-                      this.proccessBtnHandler(id);
-                    }}
-                  >
-                    Proses
-                  </CustomButton>
-                </div>
-              </div>
-            </Card.Body>
-          </Card>
-        );
-      }
-    );
+    return this.state.userData.map(({ member, id, name, email }) => {
+      return (
+        <UserCard
+          editOnly
+          image={member.selfiePhoto}
+          textTop={member.identityNumber}
+          textMiddle={name}
+          textBottom={email}
+          editText="Proses"
+          editClick={() => {
+            this.proccessBtnHandler(id);
+          }}
+        />
+        // <Card className="h-100 mt-3">
+        //   <Card.Body className={`d-flex align-items-center`}>
+        //     <div className="col-lg-1">
+        //       <p>{selfiePhoto}</p>
+        //     </div>
+        //     <div className="col-lg-8">
+        //       <p className="text-muted">{member.identityNumber}</p>
+        //       <strong>{name}</strong>
+        //       <p className="text-muted">{email}</p>
+        //     </div>
+        //     <div className="col-lg-3">
+        //       <div className="float-right">
+        //         <CustomButton
+        //           type="contained"
+        //           className="small bg-primary borderless ml-2"
+        //           onClick={() => {
+        //             this.proccessBtnHandler(id);
+        //           }}
+        //         >
+        //           Proses
+        //         </CustomButton>
+        //       </div>
+        //     </div>
+        //   </Card.Body>
+        // </Card>
+      );
+    });
   };
 
   userDataToggle = () => {

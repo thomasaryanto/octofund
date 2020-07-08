@@ -177,7 +177,6 @@ class Register extends React.Component {
   };
 
   bankListHandler = (e) => {
-    console.log(this.state);
     this.setState({
       bankForm: {
         ...this.state.bankForm,
