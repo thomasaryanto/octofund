@@ -23,9 +23,10 @@ const generalFormInit = {
 const managerFormInit = {
   logo: "",
   website: "",
+  companyName: "",
 };
 
-class StaffManageManager extends React.Component {
+class StaffManager extends React.Component {
   state = {
     userData: [],
     addDataShow: false,
@@ -42,6 +43,7 @@ class StaffManageManager extends React.Component {
         id: 0,
         logo: "",
         website: "",
+        companyName: "",
       },
     },
     generalForm: {
@@ -66,6 +68,19 @@ class StaffManageManager extends React.Component {
       [form]: {
         ...this.state[form],
         [field]: value,
+      },
+    });
+  };
+
+  inputNestedHandler = (e, field, childForm, parentForm) => {
+    const { value } = e.target;
+    this.setState({
+      [parentForm]: {
+        ...this.state[parentForm],
+        [childForm]: {
+          ...this.state[parentForm][childForm],
+          [field]: value,
+        },
       },
     });
   };
@@ -356,6 +371,7 @@ class StaffManageManager extends React.Component {
           </div>
         </section>
 
+        {/* Add Data Modal */}
         <Modal
           size="lg"
           show={this.state.addDataShow}
@@ -367,8 +383,22 @@ class StaffManageManager extends React.Component {
 
           <Modal.Body>
             <div className="row">
-              <div className="col-lg-6">
+              <div className="col-lg-12">
                 <strong className="text-muted small">Nama Perusahaan</strong>
+                <CustomText
+                  className="mb-3"
+                  value={this.state.managerForm.companyName}
+                  onChange={(e) =>
+                    this.inputHandler(e, "companyName", "managerForm")
+                  }
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-6">
+                <strong className="text-muted small">
+                  Nama Penanggung Jawab
+                </strong>
                 <CustomText
                   className="mb-3"
                   value={this.state.generalForm.name}
@@ -465,8 +495,27 @@ class StaffManageManager extends React.Component {
 
           <Modal.Body>
             <div className="row">
-              <div className="col-lg-6">
+              <div className="col-lg-12">
                 <strong className="text-muted small">Nama Perusahaan</strong>
+                <CustomText
+                  className="mb-3"
+                  value={this.state.activeUser.manager.companyName}
+                  onChange={(e) =>
+                    this.inputNestedHandler(
+                      e,
+                      "companyName",
+                      "manager",
+                      "activeUser"
+                    )
+                  }
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="col-lg-6">
+                <strong className="text-muted small">
+                  Nama Penanggung Jawab
+                </strong>
                 <CustomText
                   className="mb-3"
                   value={this.state.activeUser.name}
@@ -526,7 +575,12 @@ class StaffManageManager extends React.Component {
                   className="mb-3"
                   value={this.state.activeUser.manager.website}
                   onChange={(e) =>
-                    this.inputHandler(e, "website", "managerForm")
+                    this.inputNestedHandler(
+                      e,
+                      "website",
+                      "manager",
+                      "activeUser"
+                    )
                   }
                 />
 
@@ -534,7 +588,9 @@ class StaffManageManager extends React.Component {
                 <CustomText
                   className="mb-3"
                   value={this.state.activeUser.manager.logo}
-                  onChange={(e) => this.inputHandler(e, "logo", "managerForm")}
+                  onChange={(e) =>
+                    this.inputNestedHandler(e, "logo", "manager", "activeUser")
+                  }
                 />
               </div>
             </div>
@@ -557,4 +613,4 @@ class StaffManageManager extends React.Component {
   }
 }
 
-export default StaffManageManager;
+export default StaffManager;

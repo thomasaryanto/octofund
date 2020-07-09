@@ -1,12 +1,43 @@
 //libraries
 import React from "react";
-import { Link } from "react-router-dom";
+import swal from "sweetalert";
+import Axios from "axios";
+import { API_URL } from "../../../constants/API";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
+import ProductCard from "../../components/Cards/ProductCard";
 
 class Product extends React.Component {
+  state = {
+    mutualFundData: [],
+  };
+
+  componentWillMount() {
+    this.getMutualFundListData();
+  }
+
+  getMutualFundListData = () => {
+    Axios.get(`${API_URL}/mutualfund`)
+      .then((res) => {
+        this.setState({ mutualFundData: res.data });
+      })
+      .catch((err) => {
+        console.log("testt");
+        const errorMessage = err.response
+          ? err.response.data.errors.join("\n")
+          : err.message;
+        swal("Terjadi kesalahan!", errorMessage, "error");
+      });
+  };
+
+  renderMutualFunds = () => {
+    return this.state.mutualFundData.map((val) => {
+      return <ProductCard data={val} />;
+    });
+  };
+
   render() {
     return (
       <div className="container-fluid p-0">
@@ -43,167 +74,8 @@ class Product extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="col-lg-4 p-3">
-                <div class="card shadow">
-                  <div class="card-header">
-                    <p>TRIM Dana Tetap</p>
-                    <p className="small">PT. Trimegah Asset Management</p>
-                  </div>
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-lg-7">
-                        <p className="pt-3 small">-- tempat chart --</p>
-                      </div>
-                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
-                        <div className="ml-lg-auto">
-                          <h5>Rp 1.625,12</h5>
-                          <p className="small text-success">+1,23%</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <Link to="/detail">
-                    <div class="card-footer bg-primary text-center white">
-                      <strong>BELI</strong>
-                    </div>
-                  </Link>
-                </div>
-              </div>
 
-              <div className="col-lg-4 p-3">
-                <div class="card shadow">
-                  <div class="card-header">
-                    <p>TRIM Dana Tetap 2</p>
-                    <p className="small">PT. Trimegah Asset Management</p>
-                  </div>
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-lg-7">
-                        <p className="pt-3 small">-- tempat chart --</p>
-                      </div>
-                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
-                        <div className="ml-lg-auto">
-                          <h5>Rp 1.865,33</h5>
-                          <p className="small text-danger">-2,35%</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <Link to="/detail">
-                    <div class="card-footer bg-primary text-center white">
-                      <strong>BELI</strong>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="col-lg-4 p-3">
-                <div class="card shadow">
-                  <div class="card-header">
-                    <p>TRIM Dana Tetap 3</p>
-                    <p className="small">PT. Trimegah Asset Management</p>
-                  </div>
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-lg-7">
-                        <p className="pt-3 small">-- tempat chart --</p>
-                      </div>
-                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
-                        <div className="ml-lg-auto">
-                          <h5>Rp 2.139,66</h5>
-                          <p className="small text-success">+4,13%</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <Link to="/detail">
-                    <div class="card-footer bg-primary text-center white">
-                      <strong>BELI</strong>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="col-lg-4 p-3">
-                <div class="card shadow">
-                  <div class="card-header">
-                    <p>TRIM Dana Tetap</p>
-                    <p className="small">PT. Trimegah Asset Management</p>
-                  </div>
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-lg-7">
-                        <p className="pt-3 small">-- tempat chart --</p>
-                      </div>
-                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
-                        <div className="ml-lg-auto">
-                          <h5>Rp 1.625,12</h5>
-                          <p className="small text-success">+1,23%</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <Link to="/detail">
-                    <div class="card-footer bg-primary text-center white">
-                      <strong>BELI</strong>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="col-lg-4 p-3">
-                <div class="card shadow">
-                  <div class="card-header">
-                    <p>TRIM Dana Tetap 2</p>
-                    <p className="small">PT. Trimegah Asset Management</p>
-                  </div>
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-lg-7">
-                        <p className="pt-3 small">-- tempat chart --</p>
-                      </div>
-                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
-                        <div className="ml-lg-auto">
-                          <h5>Rp 1.865,33</h5>
-                          <p className="small text-danger">-2,35%</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <Link to="/detail">
-                    <div class="card-footer bg-primary text-center white">
-                      <strong>BELI</strong>
-                    </div>
-                  </Link>
-                </div>
-              </div>
-
-              <div className="col-lg-4 p-3">
-                <div class="card shadow">
-                  <div class="card-header">
-                    <p>TRIM Dana Tetap 3</p>
-                    <p className="small">PT. Trimegah Asset Management</p>
-                  </div>
-                  <div className="card-body">
-                    <div className="row">
-                      <div className="col-lg-7">
-                        <p className="pt-3 small">-- tempat chart --</p>
-                      </div>
-                      <div className="col-lg-5 d-flex pt-4 pt-lg-0">
-                        <div className="ml-lg-auto">
-                          <h5>Rp 2.139,66</h5>
-                          <p className="small text-success">+4,13%</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <Link to="/detail">
-                    <div class="card-footer bg-primary text-center white">
-                      <strong>BELI</strong>
-                    </div>
-                  </Link>
-                </div>
-              </div>
+              {this.renderMutualFunds()}
             </div>
           </div>
 

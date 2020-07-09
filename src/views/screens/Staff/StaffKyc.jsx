@@ -86,7 +86,6 @@ class StaffKyc extends React.Component {
     return this.state.userData.map(({ member, id, name, email }) => {
       return (
         <UserCard
-          editOnly
           image={member.selfiePhoto}
           textTop={member.identityNumber}
           textMiddle={name}
@@ -96,31 +95,6 @@ class StaffKyc extends React.Component {
             this.proccessBtnHandler(id);
           }}
         />
-        // <Card className="h-100 mt-3">
-        //   <Card.Body className={`d-flex align-items-center`}>
-        //     <div className="col-lg-1">
-        //       <p>{selfiePhoto}</p>
-        //     </div>
-        //     <div className="col-lg-8">
-        //       <p className="text-muted">{member.identityNumber}</p>
-        //       <strong>{name}</strong>
-        //       <p className="text-muted">{email}</p>
-        //     </div>
-        //     <div className="col-lg-3">
-        //       <div className="float-right">
-        //         <CustomButton
-        //           type="contained"
-        //           className="small bg-primary borderless ml-2"
-        //           onClick={() => {
-        //             this.proccessBtnHandler(id);
-        //           }}
-        //         >
-        //           Proses
-        //         </CustomButton>
-        //       </div>
-        //     </div>
-        //   </Card.Body>
-        // </Card>
       );
     });
   };

@@ -1,19 +1,68 @@
 //libraries
 import React from "react";
 import { Nav } from "react-bootstrap";
+import swal from "sweetalert";
+import Axios from "axios";
+import { API_URL } from "../../../constants/API";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
 
 class Detail extends React.Component {
+  state = {
+    mutualFund: {
+      id: 0,
+      name: "",
+      launchDate: "",
+      minimumBuy: 0,
+      totalFund: "",
+      custodyBank: "",
+      lastPrice: 0.0,
+      prospectusFile: "",
+      factsheetFile: "",
+      priceHistory: [
+        {
+          date: "",
+          price: 0.0,
+        },
+      ],
+      manager: {
+        logo: "",
+        website: "",
+        companyName: "",
+      },
+    },
+  };
+
+  componentDidMount() {
+    this.getMutualFundData(this.props.match.params.id);
+  }
+
+  getMutualFundData = (id) => {
+    Axios.get(`${API_URL}/mutualfund/${id}`)
+      .then((res) => {
+        this.setState({
+          mutualFund: {
+            ...res.data,
+          },
+        });
+      })
+      .catch((err) => {
+        const errorMessage = err.response
+          ? err.response.data.errors.join("\n")
+          : err.message;
+        swal("Terjadi kesalahan!", errorMessage, "error");
+      });
+  };
+
   render() {
     return (
       <div className="container-fluid p-0">
         <section className="d-flex align-items-center text-center header image">
           <div className="w-100 p-5">
-            <h1 className="white">TRIM Dana Tetap</h1>
-            <p className="white">PT. Trimegah Asset Management</p>
+            <h1 className="white">{this.state.mutualFund.name}</h1>
+            <p className="white">{this.state.mutualFund.manager.companyName}</p>
           </div>
         </section>
         <section>
@@ -25,7 +74,7 @@ class Detail extends React.Component {
                     <div className="row">
                       <div className="col-lg-6">
                         <h2 className="pb-0 mb-0">
-                          <strong>Rp 1.625,12 </strong>
+                          <strong>Rp {this.state.mutualFund.lastPrice} </strong>
                           <small class="text-muted"> / unit</small>
                         </h2>
                         <p>+1,23% dari hari kemarin</p>
@@ -79,25 +128,27 @@ class Detail extends React.Component {
                           </tr>
                           <tr>
                             <th scope="row">Tanggal Peluncuran</th>
-                            <td className="text-right">21 Mei 2008</td>
+                            <td className="text-right">
+                              {this.state.mutualFund.launchDate}
+                            </td>
                           </tr>
                           <tr>
                             <th scope="row">Bank Kustodian</th>
                             <td className="text-right">
-                              PT. Bank CIMB Niaga Tbk
+                              {this.state.mutualFund.custodyBank}
                             </td>
                           </tr>
                           <tr>
                             <th scope="row">Dana Kelolaan</th>
-                            <td className="text-right">Rp 246.631.593.275</td>
+                            <td className="text-right">
+                              Rp {this.state.mutualFund.totalFund}
+                            </td>
                           </tr>
                           <tr>
                             <th scope="row">Minimal Pembelian</th>
-                            <td className="text-right">Rp 100.000</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Minimal Penjualan</th>
-                            <td className="text-right">Rp 100.000</td>
+                            <td className="text-right">
+                              Rp {this.state.mutualFund.minimumBuy}
+                            </td>
                           </tr>
                         </tbody>
                       </table>

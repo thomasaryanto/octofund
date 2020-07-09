@@ -27,7 +27,8 @@ import Login from "./views/screens/Login/Login";
 import Verify from "./views/screens/Verify/Verify";
 import ResetPassword from "./views/screens/ResetPassword/ResetPassword";
 import StaffKyc from "./views/screens/Staff/StaffKyc";
-import StaffManageManager from "./views/screens/Staff/StaffManageManager";
+import StaffManager from "./views/screens/Staff/StaffManager";
+import ManagerMutualFund from "./views/screens/Manager/ManagerMutualFund";
 
 const cookieObj = new Cookie();
 
@@ -49,7 +50,7 @@ class App extends React.Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/product" component={Product} />
-            <Route exact path="/detail" component={Detail} />
+            <Route exact path="/detail/:id" component={Detail} />
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/portfolio" component={Portfolio} />
             <Route exact path="/transaction" component={Transaction} />
@@ -58,11 +59,17 @@ class App extends React.Component {
             <Route exact path="/verify/:token" component={Verify} />
             <Route exact path="/reset/:token" component={ResetPassword} />
 
+            <Route
+              exact
+              path="/manager/mutualfund"
+              component={ManagerMutualFund}
+            />
+
             <Route exact path="/staff/manage/member" component={StaffKyc} />
             <Route
               exact
               path="/staff/manage/manager"
-              component={StaffManageManager}
+              component={StaffManager}
             />
           </Switch>
           {/* <Footer /> */}

@@ -1,5 +1,6 @@
 import React from "react";
 import { Card } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import CustomButton from "../CustomButton/CustomButton";
 
 class UserCard extends React.Component {
@@ -19,7 +20,7 @@ class UserCard extends React.Component {
           </div>
           <div className="col-lg-3">
             <div className="float-right">
-              {this.props.editOnly ? (
+              {this.props.editClick ? (
                 <CustomButton
                   type="contained"
                   className="small bg-primary borderless ml-2"
@@ -27,25 +28,17 @@ class UserCard extends React.Component {
                 >
                   {this.props.editText ? this.props.editText : "Ubah"}
                 </CustomButton>
-              ) : (
-                <>
-                  <CustomButton
-                    type="contained"
-                    className="small bg-primary borderless"
-                    onClick={this.props.editClick}
-                  >
-                    {this.props.editText ? this.props.editText : "Ubah"}
-                  </CustomButton>
+              ) : null}
 
-                  <CustomButton
-                    type="contained"
-                    className="small borderless ml-2"
-                    onClick={this.props.deleteClick}
-                  >
-                    {this.props.deleteText ? this.props.deleteText : "Hapus"}
-                  </CustomButton>
-                </>
-              )}
+              {this.props.deleteClick ? (
+                <CustomButton
+                  type="contained"
+                  className="small borderless ml-2"
+                  onClick={this.props.deleteClick}
+                >
+                  {this.props.deleteText ? this.props.deleteText : "Hapus"}
+                </CustomButton>
+              ) : null}
             </div>
           </div>
         </Card.Body>
