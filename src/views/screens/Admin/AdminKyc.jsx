@@ -11,7 +11,7 @@ import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
 import UserCard from "../../components/Cards/UserCard";
 
-class StaffKyc extends React.Component {
+class AdminKyc extends React.Component {
   state = {
     userData: [],
     userDataShow: false,
@@ -275,7 +275,7 @@ class StaffKyc extends React.Component {
           </Modal.Header>
 
           <Modal.Body>
-            <Tabs defaultActiveKey="data" id="uncontrolled-tab-example">
+            <Tabs defaultActiveKey="data">
               <Tab eventKey="data" title="Data Diri">
                 <br />
                 <div className="row">
@@ -475,4 +475,4 @@ class StaffKyc extends React.Component {
   }
 }
 
-export default StaffKyc;
+export default AdminKyc;

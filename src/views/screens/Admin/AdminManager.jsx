@@ -26,7 +26,7 @@ const managerFormInit = {
   companyName: "",
 };
 
-class StaffManager extends React.Component {
+class AdminManager extends React.Component {
   state = {
     userData: [],
     addDataShow: false,
@@ -613,4 +613,4 @@ class StaffManager extends React.Component {
   }
 }
 
-export default StaffManager;
+export default AdminManager;

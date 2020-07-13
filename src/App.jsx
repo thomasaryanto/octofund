@@ -26,9 +26,11 @@ import Register from "./views/screens/Register/Register";
 import Login from "./views/screens/Login/Login";
 import Verify from "./views/screens/Verify/Verify";
 import ResetPassword from "./views/screens/ResetPassword/ResetPassword";
-import StaffKyc from "./views/screens/Staff/StaffKyc";
-import StaffManager from "./views/screens/Staff/StaffManager";
+import AdminKyc from "./views/screens/Admin/AdminKyc";
+import AdminManager from "./views/screens/Admin/AdminManager";
 import ManagerMutualFund from "./views/screens/Manager/ManagerMutualFund";
+import ManagerTransaction from "./views/screens/Manager/ManagerTransaction";
+import Payment from "./views/screens/Payment/Payment";
 
 const cookieObj = new Cookie();
 
@@ -56,6 +58,7 @@ class App extends React.Component {
             <Route exact path="/transaction" component={Transaction} />
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
+            <Route exact path="/payment/:id" component={Payment} />
             <Route exact path="/verify/:token" component={Verify} />
             <Route exact path="/reset/:token" component={ResetPassword} />
 
@@ -64,12 +67,17 @@ class App extends React.Component {
               path="/manager/mutualfund"
               component={ManagerMutualFund}
             />
+            <Route
+              exact
+              path="/manager/transaction"
+              component={ManagerTransaction}
+            />
 
-            <Route exact path="/staff/manage/member" component={StaffKyc} />
+            <Route exact path="/staff/manage/member" component={AdminKyc} />
             <Route
               exact
               path="/staff/manage/manager"
-              component={StaffManager}
+              component={AdminManager}
             />
           </Switch>
           {/* <Footer /> */}
