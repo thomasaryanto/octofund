@@ -12,9 +12,6 @@ class Payment extends React.Component {
   state = {
     transaction: {
       transactionStatus: {},
-      bankAccount: {
-        bank: {},
-      },
       mutualFund: {
         manager: {},
       },
@@ -49,7 +46,7 @@ class Payment extends React.Component {
           "Transaksi pembelian akan segera diproses oleh manajer investasi.",
           "success"
         ).then(() => {
-          this.props.history.push(`/`);
+          this.props.history.push(`/transaction`);
         });
       })
       .catch((err) => {
@@ -147,14 +144,7 @@ class Payment extends React.Component {
                           <tr>
                             <th scope="row">Tujuan Transfer</th>
                             <td className="text-right">
-                              {
-                                this.state.transaction.bankAccount.bank
-                                  .shortName
-                              }{" "}
-                              -{" "}
-                              {this.state.transaction.bankAccount.accountNumber}{" "}
-                              a/n{" "}
-                              {this.state.transaction.bankAccount.holderName}
+                              {this.state.transaction.bankName}
                             </td>
                           </tr>
                         </tbody>

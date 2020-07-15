@@ -29,13 +29,18 @@ import ResetPassword from "./views/screens/ResetPassword/ResetPassword";
 import AdminKyc from "./views/screens/Admin/AdminKyc";
 import AdminManager from "./views/screens/Admin/AdminManager";
 import ManagerMutualFund from "./views/screens/Manager/ManagerMutualFund";
+import ManagerMutualFundPackage from "./views/screens/Manager/ManagerMutualFundPackage";
 import ManagerTransaction from "./views/screens/Manager/ManagerTransaction";
 import Payment from "./views/screens/Payment/Payment";
+import ManagerBankAccount from "./views/screens/Manager/ManagerBankAccount";
+import Package from "./views/screens/Package/Package";
+import PackageDetail from "./views/screens/PackageDetail/PackageDetail";
 
 const cookieObj = new Cookie();
 
 class App extends React.Component {
   componentDidMount() {
+    document.title = "OctoFund - Platform Investasi Reksadana";
     let cookieResult = cookieObj.get("authData", { path: "/" });
     if (cookieResult) {
       this.props.keepLogin(cookieResult);
@@ -52,7 +57,9 @@ class App extends React.Component {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route exact path="/product" component={Product} />
-            <Route exact path="/detail/:id" component={Detail} />
+            <Route exact path="/product/:id" component={Detail} />
+            <Route exact path="/package" component={Package} />
+            <Route exact path="/package/:id" component={PackageDetail} />
             <Route exact path="/profile" component={Profile} />
             <Route exact path="/portfolio" component={Portfolio} />
             <Route exact path="/transaction" component={Transaction} />
@@ -69,8 +76,18 @@ class App extends React.Component {
             />
             <Route
               exact
+              path="/manager/package"
+              component={ManagerMutualFundPackage}
+            />
+            <Route
+              exact
               path="/manager/transaction"
               component={ManagerTransaction}
+            />
+            <Route
+              exact
+              path="/manager/bankaccount"
+              component={ManagerBankAccount}
             />
 
             <Route exact path="/staff/manage/member" component={AdminKyc} />

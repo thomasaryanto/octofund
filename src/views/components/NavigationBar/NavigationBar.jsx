@@ -20,9 +20,12 @@ class NavigationBar extends React.Component {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <Nav.Link>
-              <Link to="/product">Produk </Link>
-            </Nav.Link>
+            <LinkContainer to="/product">
+              <Nav.Link>Produk</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/package">
+              <Nav.Link>Paket</Nav.Link>
+            </LinkContainer>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action/3.2">

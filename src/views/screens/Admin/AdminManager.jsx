@@ -85,7 +85,7 @@ class AdminManager extends React.Component {
     });
   };
 
-  handlePageChange = (pageNumber) => {
+  pageChangeHandler = (pageNumber) => {
     this.setState({ activePage: pageNumber }, () => {
       this.getUserListData(this.state.activePage);
     });
@@ -131,12 +131,12 @@ class AdminManager extends React.Component {
   };
 
   renderUsers = () => {
-    return this.state.userData.map(({ manager, id, username, name }) => {
+    return this.state.userData.map(({ manager, id, name }) => {
       return (
         <UserCard
           image={manager.logo}
-          textTop={username}
-          textMiddle={name}
+          textTop={name}
+          textMiddle={manager.companyName}
           textBottom={manager.website}
           editClick={() => {
             this.editBtnHandler(id);
@@ -176,11 +176,7 @@ class AdminManager extends React.Component {
 
     Axios.put(`${API_URL}/users`, this.state.activeUser)
       .then((res) => {
-        swal(
-          "Registrasi berhasil!",
-          "Manajer investasi berhasil disunting!",
-          "success"
-        );
+        swal("Berhasil!", "Manajer investasi berhasil disunting!", "success");
         this.editDataToggle();
         this.getUserListData();
       })
@@ -360,7 +356,7 @@ class AdminManager extends React.Component {
                           itemClass="page-item"
                           linkClass="page-link"
                           innerClass="pagination justify-content-center"
-                          onChange={this.handlePageChange.bind(this)}
+                          onChange={this.pageChangeHandler.bind(this)}
                         />
                       </div>
                     </div>

@@ -1,44 +1,31 @@
 //libraries
 import React from "react";
 import { Nav, Modal } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import Select from "react-select";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+
+import { PieChart, Pie, Cell, Tooltip } from "recharts";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
 
-class Detail extends React.Component {
+class PackageDetail extends React.Component {
   state = {
-    mutualFund: {
+    mutualFundPackage: {
       id: 0,
-      name: "",
-      launchDate: "",
-      minimumBuy: 0,
-      totalFund: "",
-      custodyBank: "",
-      lastPrice: 0.0,
-      prospectusFile: "",
-      factsheetFile: "",
-      limited: false,
-      stock: 0,
-      priceHistory: [
-        {
-          date: "",
-          price: 0.0,
-        },
-      ],
+      packageName: "",
+      description: "",
+      date: null,
+      percentageOne: 0,
+      percentageTwo: 0,
+      percentageThree: 0,
+      productOne: {},
+      productTwo: {},
+      productThree: {},
       manager: {
         id: 0,
         logo: "",
@@ -46,8 +33,9 @@ class Detail extends React.Component {
         companyName: "",
       },
     },
-    priceChart: [],
-    percentYields: 0,
+    chartData: [],
+    totalBuy: 0,
+    paymentFile: null,
     bankList: {},
     bankAccount: null,
     totalBuy: 100000,
@@ -55,11 +43,15 @@ class Detail extends React.Component {
   };
 
   componentDidMount() {
-    this.getMutualFundData();
+    this.getMutualFundPackageData();
   }
 
   inputHandler = (event, field) => {
     this.setState({ [field]: event.target.value });
+  };
+
+  fileChangeHandler = (e) => {
+    this.setState({ paymentFile: e.target.files[0] });
   };
 
   bankAccountHandler = (e) => {
@@ -76,21 +68,18 @@ class Detail extends React.Component {
     this.setState({ paymentShow: !this.state.paymentShow });
   };
 
-  getMutualFundData = () => {
-    Axios.get(`${API_URL}/mutualfund/${this.props.match.params.id}`)
+  getMutualFundPackageData = () => {
+    Axios.get(`${API_URL}/packages/${this.props.match.params.id}`)
       .then((res) => {
         this.setState(
           {
-            mutualFund: {
+            mutualFundPackage: {
               ...res.data,
             },
           },
           () => {
             this.getBankList();
-            this.getPercentYields();
-            this.setState({
-              priceChart: [...this.state.mutualFund.priceHistory].reverse(),
-            });
+            this.getChartData();
           }
         );
       })
@@ -102,20 +91,28 @@ class Detail extends React.Component {
       });
   };
 
-  getPercentYields = () => {
-    const countPercentYields = (
-      ((this.state.mutualFund.priceHistory[0].price -
-        this.state.mutualFund.priceHistory[1].price) /
-        this.state.mutualFund.priceHistory[0].price) *
-      100
-    ).toFixed(2);
-
-    this.setState({ percentYields: countPercentYields });
+  getChartData = () => {
+    this.setState({
+      chartData: [
+        {
+          name: this.state.mutualFundPackage.productOne.name,
+          value: this.state.mutualFundPackage.percentageOne,
+        },
+        {
+          name: this.state.mutualFundPackage.productTwo.name,
+          value: this.state.mutualFundPackage.percentageTwo,
+        },
+        {
+          name: this.state.mutualFundPackage.productThree.name,
+          value: this.state.mutualFundPackage.percentageThree,
+        },
+      ],
+    });
   };
 
   getBankList = () => {
     Axios.get(
-      `${API_URL}/banks/accounts/user/${this.state.mutualFund.manager.id}/all`
+      `${API_URL}/banks/accounts/user/${this.state.mutualFundPackage.manager.id}/all`
     )
       .then((res) => {
         this.setState({
@@ -134,29 +131,34 @@ class Detail extends React.Component {
   };
 
   buyBtnHandler = () => {
-    if (this.state.bankAccount == null) {
-      return swal("Terjadi kesalahan!", "Bank harus dipilih!", "error");
-    }
+    let formData = new FormData();
+
     const transactionData = {
-      productName: this.state.mutualFund.name,
-      managerName: this.state.mutualFund.manager.companyName,
       bankName: this.state.bankAccount.name,
       totalPrice: this.state.totalBuy,
-      mutualFund: {
-        id: this.state.mutualFund.id,
-      },
       member: {
         id: 1,
       },
     };
-    Axios.post(`${API_URL}/transactions/buy`, transactionData)
+
+    formData.append(
+      "file",
+      this.state.paymentFile,
+      this.state.paymentFile.name
+    );
+    formData.append("transactionData", JSON.stringify(transactionData));
+
+    Axios.post(
+      `${API_URL}/transactions/buy/package/${this.state.mutualFundPackage.id}`,
+      formData
+    )
       .then((res) => {
         swal(
-          "Pembelian berhasil!",
-          "Silahkan lakukan pembayaran dan konfirmasi untuk melanjutkan.",
+          "Pembelian paket berhasil!",
+          "Transaksi kamu kaan segera diproses oleh manajer investasi.",
           "success"
         ).then(() => {
-          this.props.history.push(`/payment/${res.data.id}`);
+          this.props.history.push(`/transaction`);
         });
       })
       .catch((err) => {
@@ -167,90 +169,51 @@ class Detail extends React.Component {
       });
   };
 
+  renderCustomizedLabel = ({ percent }) => {
+    return (
+      <text dominantBaseline="central">{`${(percent * 100).toFixed(0)}%`}</text>
+    );
+  };
+
   render() {
     return (
       <>
         <div className="container-fluid p-0">
           <section className="d-flex align-items-center text-center header image">
             <div className="w-100 p-5">
-              <h1 className="white">{this.state.mutualFund.name}</h1>
+              <h1 className="white">
+                {this.state.mutualFundPackage.packageName}
+              </h1>
               <p className="white">
-                {this.state.mutualFund.manager.companyName}
+                {this.state.mutualFundPackage.manager.companyName}
               </p>
             </div>
           </section>
           <section>
             <div className="w-100 p-5">
               <div className="row">
-                <div className="col-lg-12">
-                  <div class="card shadow-sm mb-4">
-                    <div className="card-body p-3">
-                      <div className="row">
-                        <div className="col-lg-6">
-                          <h2 className="pb-0 mb-0">
-                            <strong>
-                              Rp {this.state.mutualFund.lastPrice}{" "}
-                            </strong>
-                            <small class="text-muted"> / unit</small>
-                            <p>{this.state.percentYields}% dari hari kemarin</p>
-                          </h2>
-                        </div>
-                        <div className="col-lg-6 d-flex pt-3 pt-lg-0">
-                          <Nav
-                            variant="pills"
-                            defaultActiveKey="minggu"
-                            className="ml-lg-auto"
-                          >
-                            <Nav.Item>
-                              <Nav.Link eventKey="minggu">Minggu</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                              <Nav.Link eventKey="bulan">Bulan</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                              <Nav.Link eventKey="tahun">Tahun</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                              <Nav.Link eventKey="lima-tahun">5 Tahun</Nav.Link>
-                            </Nav.Item>
-                          </Nav>
-                        </div>
-                      </div>
-                      <div className="row">
-                        <div className="col-lg-12 pb-5">
-                          <br />
-                          <div style={{ width: "100%", height: 300 }}>
-                            <ResponsiveContainer>
-                              <AreaChart
-                                data={this.state.priceChart}
-                                margin={{
-                                  top: 10,
-                                  right: 30,
-                                  left: 0,
-                                  bottom: 0,
-                                }}
-                              >
-                                <CartesianGrid strokeDasharray="3 3" />
-                                <XAxis dataKey="date" />
-                                <YAxis />
-                                <Tooltip />
-                                <Area
-                                  type="monotone"
-                                  dataKey="price"
-                                  stroke="#8884d8"
-                                  fill="#8884d8"
-                                />
-                              </AreaChart>
-                            </ResponsiveContainer>
-                          </div>
-                        </div>
+                <div className="col-lg-6 p-3">
+                  <div class="card shadow h-100">
+                    <div class="card-header">
+                      <p>Persentase Komposisi (%)</p>
+                    </div>
+                    <div className="card-body">
+                      <div className="col-lg-12 text-center d-flex align-items-center justify-content-center">
+                        <PieChart width={300} height={300}>
+                          <Pie
+                            dataKey="value"
+                            data={this.state.chartData}
+                            outerRadius={100}
+                            fill="#FA5E6B"
+                            label
+                          />
+                          <Tooltip />
+                        </PieChart>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <div className="row">
                 <div className="col-lg-6 p-3">
                   <div class="card shadow h-100">
                     <div class="card-header">
@@ -261,66 +224,110 @@ class Detail extends React.Component {
                         <table class="table table-sm table-borderless table-hover">
                           <tbody>
                             <tr>
-                              <th scope="row">Jenis Reksa Dana</th>
-                              <td className="text-right">Pendapatan Tetap</td>
+                              <th scope="row">Nama Paket</th>
+                              <td className="text-right">
+                                {this.state.mutualFundPackage.packageName}
+                              </td>
+                            </tr>
+
+                            <tr>
+                              <th scope="row">Manajer Investasi</th>
+                              <td className="text-right">
+                                {
+                                  this.state.mutualFundPackage.manager
+                                    .companyName
+                                }
+                              </td>
                             </tr>
                             <tr>
                               <th scope="row">Tanggal Diluncurkan</th>
                               <td className="text-right">
-                                {this.state.mutualFund.launchDate}
+                                {this.state.mutualFundPackage.date}
                               </td>
                             </tr>
                             <tr>
-                              <th scope="row">Bank Kustodian</th>
+                              <th scope="row">Reksadana 1</th>
                               <td className="text-right">
-                                {this.state.mutualFund.custodyBank}
+                                <Link
+                                  to={`/product/${this.state.mutualFundPackage.productOne.id}`}
+                                >
+                                  {this.state.mutualFundPackage.productOne.name}
+                                </Link>
                               </td>
                             </tr>
                             <tr>
-                              <th scope="row">Dana Kelolaan</th>
+                              <th scope="row">Harga Terakhir</th>
                               <td className="text-right">
-                                Rp {this.state.mutualFund.totalFund}
+                                Rp.{" "}
+                                {
+                                  this.state.mutualFundPackage.productOne
+                                    .lastPrice
+                                }
                               </td>
                             </tr>
                             <tr>
-                              <th scope="row">Minimal Pembelian</th>
+                              <th scope="row">Reksadana 2</th>
                               <td className="text-right">
-                                Rp {this.state.mutualFund.minimumBuy}
+                                <Link
+                                  to={`/product/${this.state.mutualFundPackage.productTwo.id}`}
+                                >
+                                  {this.state.mutualFundPackage.productTwo.name}
+                                </Link>
                               </td>
                             </tr>
-                            {this.state.mutualFund.limited ? (
-                              <tr>
-                                <th scope="row">Sisa Stok</th>
-                                <td className="text-right">
-                                  {this.state.mutualFund.stock.toFixed(2)} unit
-                                </td>
-                              </tr>
-                            ) : null}
+                            <tr>
+                              <th scope="row">Harga Terakhir</th>
+                              <td className="text-right">
+                                Rp.{" "}
+                                {
+                                  this.state.mutualFundPackage.productTwo
+                                    .lastPrice
+                                }
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Reksadana 3</th>
+                              <td className="text-right">
+                                <Link
+                                  to={`/product/${this.state.mutualFundPackage.productThree.id}`}
+                                >
+                                  {
+                                    this.state.mutualFundPackage.productThree
+                                      .name
+                                  }
+                                </Link>
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Harga Terakhir</th>
+                              <td className="text-right">
+                                Rp.{" "}
+                                {
+                                  this.state.mutualFundPackage.productThree
+                                    .lastPrice
+                                }
+                              </td>
+                            </tr>
                           </tbody>
                         </table>
-                        <hr />
-                        <div className="text-center">
-                          <a href={this.state.mutualFund.prospectusFile}>
-                            <CustomButton
-                              type="contained"
-                              className="small bg-primary borderless"
-                            >
-                              ▼ Prospectus
-                            </CustomButton>
-                          </a>
-                          <a href={this.state.mutualFund.factsheetFile}>
-                            <CustomButton
-                              type="contained"
-                              className="small bg-primary borderless ml-2"
-                            >
-                              ▼ Fact Sheet
-                            </CustomButton>
-                          </a>
-                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div className="row">
+                <div className="col-lg-6 p-3">
+                  <div class="card shadow h-100">
+                    <div class="card-header">
+                      <p>Deskripsi</p>
+                    </div>
+                    <div className="card-body">
+                      <p>{this.state.mutualFundPackage.description}</p>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="col-lg-6 p-3">
                   <div class="card shadow h-100">
                     <div class="card-header">
@@ -399,13 +406,13 @@ class Detail extends React.Component {
 
         <Modal show={this.state.paymentShow} onHide={this.paymentToggle}>
           <Modal.Header closeButton>
-            <Modal.Title>Pilih Pembayaran</Modal.Title>
+            <Modal.Title>Konfirmasi Pembayaran</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
             <p>
-              Kamu akan melakukan pembelian reksadana{" "}
-              {this.state.mutualFund.name} sebesar Rp. {this.state.totalBuy}
+              Silahkan lakukan pembayaran sebesar Rp. {this.state.totalBuy} ke
+              salah satu no rekening berikut dan upload bukti transfer.
             </p>
             <hr />
             <strong className="text-muted small">Pilih Tujuan Transfer</strong>
@@ -416,6 +423,14 @@ class Detail extends React.Component {
               onChange={this.bankAccountHandler}
               options={this.state.bankList}
               placeholder="Pilih Bank..."
+            />
+            <br />
+            <strong className="text-muted small">Pilih Bukti Transfer</strong>
+            <br />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={this.fileChangeHandler}
             />
           </Modal.Body>
 
@@ -434,4 +449,4 @@ class Detail extends React.Component {
   }
 }
 
-export default Detail;
+export default PackageDetail;

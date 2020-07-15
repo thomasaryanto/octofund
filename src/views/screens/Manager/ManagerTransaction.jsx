@@ -21,9 +21,6 @@ class ManagerTransaction extends React.Component {
       transactionStatus: {},
       mutualFund: {},
       member: {},
-      bankAccount: {
-        bank: {},
-      },
     },
 
     activePage: 1,
@@ -79,13 +76,28 @@ class ManagerTransaction extends React.Component {
       });
   };
 
+  convertDate = (timestamp) => {
+    var date = timestamp.split(".");
+    date = date[0].replace("T", " ");
+    // date = date.split(/[- :]/);
+    // var dateFix = new Date(
+    //   date[0],
+    //   date[1] - 1,
+    //   date[2],
+    //   date[3] || 0,
+    //   date[4] || 0,
+    //   date[5] || 0
+    // );
+    return date;
+  };
+
   renderTransactions = () => {
     return this.state.transactionData.map(
       ({ id, date, mutualFund, totalPrice, paymentProof }) => {
         return (
           <UserCard
             image={paymentProof}
-            textTop={date}
+            textTop={this.convertDate(date)}
             textMiddle={mutualFund.name}
             textBottom={totalPrice}
             editText="Proses"
@@ -247,7 +259,7 @@ class ManagerTransaction extends React.Component {
           onHide={this.transactionDataToggle}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Data Nasabah</Modal.Title>
+            <Modal.Title>Detail Transaksi</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
