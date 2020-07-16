@@ -44,16 +44,21 @@ class Transaction extends React.Component {
     });
   };
 
-  handlePageChange = (pageNumber) => {
+  pageChangeHandler = (pageNumber) => {
     this.setState({ activePage: pageNumber }, () => {
       this.getTransactionListData(this.state.activeTab, this.state.activePage);
     });
   };
 
   getTransactionListData = (type, page) => {
-    Axios.get(
-      `${API_URL}/transactions/member/${type}/1?page=${page - 1}&size=2`
-    )
+    Axios.get(`${API_URL}/transactions/member/${type}/1`, {
+      params: {
+        page: page - 1,
+        size: 2,
+        sortKey: "id",
+        sortType: "desc",
+      },
+    })
       .then((res) => {
         const totalPages = res.data.totalPages;
         const itemsCountPerPage = res.data.size;
@@ -206,7 +211,7 @@ class Transaction extends React.Component {
                       itemClass="page-item"
                       linkClass="page-link"
                       innerClass="pagination justify-content-center"
-                      onChange={this.handlePageChange.bind(this)}
+                      onChange={this.pageChangeHandler.bind(this)}
                     />
                   </div>
                 </div>

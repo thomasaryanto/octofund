@@ -72,7 +72,6 @@ class Detail extends React.Component {
   };
 
   paymentToggle = () => {
-    console.log(this.state);
     this.setState({ paymentShow: !this.state.paymentShow });
   };
 
