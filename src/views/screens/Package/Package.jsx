@@ -3,6 +3,7 @@ import React from "react";
 import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
+import Pagination from "react-js-pagination";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -11,16 +12,38 @@ import PackageCard from "../../components/Cards/PackageCard";
 class Package extends React.Component {
   state = {
     mutualFundPackageData: [],
+    activePage: 1,
+    totalPages: null,
+    itemsCountPerPage: null,
+    totalItemsCount: null,
   };
 
   componentWillMount() {
-    this.getMutualFundPackageListData();
+    this.getMutualFundPackageListData(this.state.activePage);
   }
 
-  getMutualFundPackageListData = () => {
-    Axios.get(`${API_URL}/packages`)
+  pageChangeHandler = (pageNumber) => {
+    this.setState({ activePage: pageNumber }, () => {
+      this.getMutualFundPackageListData(this.state.activePage);
+    });
+  };
+
+  getMutualFundPackageListData = (page) => {
+    Axios.get(`${API_URL}/packages`, {
+      params: {
+        page: page - 1,
+        size: 2,
+      },
+    })
       .then((res) => {
-        this.setState({ mutualFundPackageData: res.data });
+        const totalPages = res.data.totalPages;
+        const itemsCountPerPage = res.data.size;
+        const totalItemsCount = res.data.totalElements;
+
+        this.setState({ totalPages: totalPages });
+        this.setState({ totalItemsCount: totalItemsCount });
+        this.setState({ itemsCountPerPage: itemsCountPerPage });
+        this.setState({ mutualFundPackageData: res.data.content });
       })
       .catch((err) => {
         const errorMessage = err.response
@@ -47,11 +70,28 @@ class Package extends React.Component {
         </section>
         <section>
           <div className="w-100 p-5">
-            <div className="row">{this.renderMutualFundPackages()}</div>
+            <div className="row">
+              {this.state.totalItemsCount > 0 ? (
+                this.renderMutualFundPackages()
+              ) : (
+                <h1>Belum ada data</h1>
+              )}
+            </div>
           </div>
 
           <div className="text-center pb-5">
-            <CustomButton type="contained">▼ Lebih Banyak</CustomButton>
+            <Pagination
+              hideDisabled
+              hideNavigation
+              activePage={this.state.activePage}
+              itemsCountPerPage={this.state.itemsCountPerPage}
+              totalItemsCount={this.state.totalItemsCount}
+              pageRangeDisplayed={10}
+              itemClass="page-item"
+              linkClass="page-link"
+              innerClass="pagination justify-content-center"
+              onChange={this.pageChangeHandler.bind(this)}
+            />
           </div>
         </section>
       </div>

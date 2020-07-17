@@ -2,7 +2,6 @@
 import React from "react";
 import { Navbar, Nav, NavDropdown } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { logoutHandler } from "../../../redux/actions";
 
@@ -26,23 +25,39 @@ class NavigationBar extends React.Component {
             <LinkContainer to="/package">
               <Nav.Link>Paket</Nav.Link>
             </LinkContainer>
-            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.2">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">
-                Separated link
-              </NavDropdown.Item>
-            </NavDropdown>
           </Nav>
           <Nav>
             {this.props.user.id ? (
               <>
-                <Navbar.Text>{this.props.user.email}</Navbar.Text>
-                <Nav.Link onClick={this.logoutBtnHandler}>Keluar</Nav.Link>
+                {this.props.user.role.id == 2 ? (
+                  <Navbar.Text>
+                    {this.props.user.manager.companyName}
+                  </Navbar.Text>
+                ) : (
+                  <Navbar.Text>{this.props.user.name}</Navbar.Text>
+                )}
+
+                {this.props.user.role.id == 1 ? (
+                  <LinkContainer to="/admin">
+                    <Nav.Link>Dasboard</Nav.Link>
+                  </LinkContainer>
+                ) : null}
+
+                {this.props.user.role.id == 2 ? (
+                  <LinkContainer to="/manager">
+                    <Nav.Link>Dasboard</Nav.Link>
+                  </LinkContainer>
+                ) : null}
+
+                {this.props.user.role.id == 3 ? (
+                  <LinkContainer to="/member">
+                    <Nav.Link>Dasboard</Nav.Link>
+                  </LinkContainer>
+                ) : null}
+
+                <LinkContainer to="/">
+                  <Nav.Link onClick={this.logoutBtnHandler}>Keluar</Nav.Link>
+                </LinkContainer>
               </>
             ) : (
               <>

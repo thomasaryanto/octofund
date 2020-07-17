@@ -1,6 +1,7 @@
 //libraries
 import React from "react";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -21,11 +22,25 @@ class Home extends React.Component {
               semudah belanja online!
             </p>
             <br />
-            <Link to="/product">
-              <CustomButton type="contained" className="bg-primary borderless">
-                Daftar Sekarang
-              </CustomButton>
-            </Link>
+            {this.props.user.id != 0 ? (
+              <Link to="/product">
+                <CustomButton
+                  type="contained"
+                  className="bg-primary borderless"
+                >
+                  Investasi Sekarang
+                </CustomButton>
+              </Link>
+            ) : (
+              <Link to="/register">
+                <CustomButton
+                  type="contained"
+                  className="bg-primary borderless"
+                >
+                  Daftar Sekarang
+                </CustomButton>
+              </Link>
+            )}
 
             <a class="btn-scroll" href="#more">
               <img alt="More" src={arrow} />
@@ -61,7 +76,7 @@ class Home extends React.Component {
             </div>
           </div>
         </section>
-
+        {/* 
         <section className="d-flex align-items-center image">
           <div className="w-100 p-5">
             <h2 className="white">Artikel Investasi</h2>
@@ -239,10 +254,16 @@ class Home extends React.Component {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
     );
   }
 }
 
-export default Home;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(Home);

@@ -70,7 +70,7 @@ class ProductCard extends React.Component {
               </div>
             </div>
           </div>
-          <Link to={`/product/${id}`}>
+          <Link to={`/product/${id}`} style={{ textDecoration: "none" }}>
             <div class="card-footer bg-primary text-center white">
               <strong>BELI</strong>
             </div>

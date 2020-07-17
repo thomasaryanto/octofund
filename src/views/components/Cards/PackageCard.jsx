@@ -20,7 +20,7 @@ class PackageCard extends React.Component {
               </div>
             </div>
           </div>
-          <Link to={`/package/${id}`}>
+          <Link to={`/package/${id}`} style={{ textDecoration: "none" }}>
             <div class="card-footer bg-primary text-center white">
               <strong>BELI</strong>
             </div>

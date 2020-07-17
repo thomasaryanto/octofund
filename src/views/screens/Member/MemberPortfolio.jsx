@@ -11,8 +11,9 @@ import Select from "react-select";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
 import PortfolioCard from "../../components/Cards/PortfolioCard";
+import MemberSideBar from "../../components/SideBar/MemberSideBar";
 
-class Portfolio extends React.Component {
+class MemberPortfolio extends React.Component {
   state = {
     portfolioData: [],
     activePortfolio: {
@@ -83,7 +84,7 @@ class Portfolio extends React.Component {
           "Dana akan ditransfer ke rekening yg dipilih dalam maksimal 3 hari kerja.",
           "success"
         ).then(() => {
-          this.props.history.push(`/transaction`);
+          this.props.history.push(`/member/transaction`);
         });
       })
       .catch((err) => {
@@ -153,7 +154,7 @@ class Portfolio extends React.Component {
         <PortfolioCard
           data={val}
           buyClick={() => {
-            this.props.history.push(`/detail/${val.mutualFund.id}`);
+            this.props.history.push(`/product/${val.mutualFund.id}`);
           }}
           sellClick={() => {
             this.sellModalBtnHandler(val.id);
@@ -166,91 +167,14 @@ class Portfolio extends React.Component {
   render() {
     return (
       <>
-        <section>
+        <div className="container-fluid image">
           <div className="w-100 p-5">
             <div className="row">
-              <div className="col-lg-3">
-                <div className="card">
-                  <div className="card-body">
-                    <h5>Thomas Aryanto</h5>
-                    <p className="pt-2 text-muted">Total investasi</p>
-                    <h5>Rp.2.000.000</h5>
-                    <p className="pt-2 text-muted">Total imbal hasil</p>
-                    <h5 className="pb-2">
-                      Rp.120.000 <small>(+1,8%)</small>
-                    </h5>
-
-                    <hr />
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pt-2"
-                    >
-                      Profil
-                    </CustomButton>
-
-                    <CustomButton type="textual" className="block borderless">
-                      Portfolio
-                    </CustomButton>
-
-                    <CustomButton type="textual" className="block borderless">
-                      Transaksi
-                    </CustomButton>
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pb-2"
-                    >
-                      Pengaturan
-                    </CustomButton>
-
-                    <hr />
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pt-2"
-                    >
-                      Keluar
-                    </CustomButton>
-                  </div>
-                </div>
-              </div>
+              <MemberSideBar />
 
               <div className="col-lg-9">
                 <div className="card">
                   <div className="card-body">
-                    {/* <div className="row">
-                    <div className="col-lg-12">
-                      <div class="card shadow-sm mb-4">
-                        <div className="card-body p-3">
-                          <div className="row">
-                            <div className="col-lg-6">
-                              <CustomText
-                                className="small"
-                                placeholder="Pencarian.."
-                              />
-                            </div>
-                            <div className="col-lg-6 d-flex pt-3 pt-lg-0">
-                              <div className="ml-lg-auto">
-                                <CustomButton
-                                  type="contained"
-                                  className="small"
-                                >
-                                  ☰ Filter
-                                </CustomButton>
-                                <CustomButton
-                                  type="contained"
-                                  className="small ml-2"
-                                >
-                                  ↕ Sort
-                                </CustomButton>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div> */}
                     <h3>
                       Portoflio Kamu{" "}
                       <span class="badge badge-pill badge-primary">
@@ -279,7 +203,7 @@ class Portfolio extends React.Component {
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         <Modal
           show={this.state.sellPortfolioShow}
@@ -323,4 +247,4 @@ class Portfolio extends React.Component {
   }
 }
 
-export default Portfolio;
+export default MemberPortfolio;

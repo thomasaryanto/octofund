@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
+import { connect } from "react-redux";
 import Select from "react-select";
 
 import { PieChart, Pie, Cell, Tooltip } from "recharts";
@@ -158,7 +159,7 @@ class PackageDetail extends React.Component {
           "Transaksi kamu kaan segera diproses oleh manajer investasi.",
           "success"
         ).then(() => {
-          this.props.history.push(`/transaction`);
+          this.props.history.push(`/member/transaction`);
         });
       })
       .catch((err) => {
@@ -385,16 +386,39 @@ class PackageDetail extends React.Component {
                           </Nav.Item>
                         </Nav>
                         <CustomText
+                          type="number"
                           value={this.state.totalBuy}
                           onChange={(e) => this.inputHandler(e, "totalBuy")}
                         />
-                        <CustomButton
-                          type="contained"
-                          className="mt-4 full"
-                          onClick={this.paymentToggle}
-                        >
-                          Beli Sekarang
-                        </CustomButton>
+                        {this.props.user.role.id == 3 ? (
+                          <CustomButton
+                            type="contained"
+                            className="mt-4 full"
+                            onClick={
+                              this.props.user.kyc
+                                ? this.paymentToggle
+                                : () => {
+                                    swal(
+                                      "Terjadi kesalahan!",
+                                      "Akun kamu masih menunggu hasil verifikasi data diri.",
+                                      "error"
+                                    );
+                                  }
+                            }
+                          >
+                            Beli Sekarang
+                          </CustomButton>
+                        ) : (
+                          <CustomButton
+                            type="textual"
+                            className="mt-4 full"
+                            onClick={() => {
+                              this.props.history.push(`/login`);
+                            }}
+                          >
+                            Masuk untuk membeli
+                          </CustomButton>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -449,4 +473,10 @@ class PackageDetail extends React.Component {
   }
 }
 
-export default PackageDetail;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(PackageDetail);

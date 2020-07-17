@@ -5,11 +5,13 @@ import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import Pagination from "react-js-pagination";
+import { connect } from "react-redux";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
 import UserCard from "../../components/Cards/UserCard";
+import ManagerSideBar from "../../components/SideBar/ManagerSideBar";
 
 class ManagerTransaction extends React.Component {
   state = {
@@ -44,7 +46,11 @@ class ManagerTransaction extends React.Component {
   };
 
   getTransactionListData = (page) => {
-    Axios.get(`${API_URL}/transactions/manager/2?page=${page - 1}&size=2`)
+    Axios.get(
+      `${API_URL}/transactions/manager/${this.props.user.id}?page=${
+        page - 1
+      }&size=2`
+    )
       .then((res) => {
         const totalPages = res.data.totalPages;
         const itemsCountPerPage = res.data.size;
@@ -99,7 +105,7 @@ class ManagerTransaction extends React.Component {
             image={paymentProof}
             textTop={this.convertDate(date)}
             textMiddle={mutualFund.name}
-            textBottom={totalPrice}
+            textBottom={`Rp. ${totalPrice}`}
             editText="Proses"
             editClick={() => {
               this.proccessBtnHandler(id);
@@ -173,55 +179,10 @@ class ManagerTransaction extends React.Component {
   render() {
     return (
       <>
-        <section>
+        <div className="container-fluid image">
           <div className="w-100 p-5">
             <div className="row">
-              <div className="col-lg-3">
-                <div className="card">
-                  <div className="card-body">
-                    <h5>Thomas Aryanto</h5>
-                    <p className="pt-2 text-muted">Total investasi</p>
-                    <h5>Rp.2.120.000</h5>
-                    <p className="pt-2 text-muted">Total imbal hasil</p>
-                    <h5 className="pb-2">
-                      Rp.120.000 <small>(+1,8%)</small>
-                    </h5>
-
-                    <hr />
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pt-2"
-                    >
-                      Profil
-                    </CustomButton>
-
-                    <CustomButton type="textual" className="block borderless">
-                      Portfolio
-                    </CustomButton>
-
-                    <CustomButton type="textual" className="block borderless">
-                      Transaksi
-                    </CustomButton>
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pb-2"
-                    >
-                      Pengaturan
-                    </CustomButton>
-
-                    <hr />
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pt-2"
-                    >
-                      Keluar
-                    </CustomButton>
-                  </div>
-                </div>
-              </div>
+              <ManagerSideBar />
               <div className="col-lg-9">
                 <div className="card">
                   <div className="card-body">
@@ -251,7 +212,7 @@ class ManagerTransaction extends React.Component {
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         <Modal
           size="lg"
@@ -381,4 +342,10 @@ class ManagerTransaction extends React.Component {
   }
 }
 
-export default ManagerTransaction;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(ManagerTransaction);

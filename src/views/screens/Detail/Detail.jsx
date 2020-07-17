@@ -4,6 +4,7 @@ import { Nav, Modal } from "react-bootstrap";
 import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
+import { connect } from "react-redux";
 import Select from "react-select";
 import {
   AreaChart,
@@ -118,9 +119,9 @@ class Detail extends React.Component {
     )
       .then((res) => {
         this.setState({
-          bankList: res.data.map(({ id, bank, accountNumber }) => ({
+          bankList: res.data.map(({ id, bank, accountNumber, holderName }) => ({
             id: id,
-            name: bank.name + " - " + accountNumber,
+            name: bank.name + " - " + accountNumber + " - " + holderName,
           })),
         });
       })
@@ -377,16 +378,39 @@ class Detail extends React.Component {
                           </Nav.Item>
                         </Nav>
                         <CustomText
+                          type="number"
                           value={this.state.totalBuy}
                           onChange={(e) => this.inputHandler(e, "totalBuy")}
                         />
-                        <CustomButton
-                          type="contained"
-                          className="mt-4 full"
-                          onClick={this.paymentToggle}
-                        >
-                          Beli Sekarang
-                        </CustomButton>
+                        {this.props.user.role.id == 3 ? (
+                          <CustomButton
+                            type="contained"
+                            className="mt-4 full"
+                            onClick={
+                              this.props.user.kyc
+                                ? this.paymentToggle
+                                : () => {
+                                    swal(
+                                      "Terjadi kesalahan!",
+                                      "Akun kamu masih menunggu hasil verifikasi data diri.",
+                                      "error"
+                                    );
+                                  }
+                            }
+                          >
+                            Beli Sekarang
+                          </CustomButton>
+                        ) : (
+                          <CustomButton
+                            type="textual"
+                            className="mt-4 full"
+                            onClick={() => {
+                              this.props.history.push(`/login`);
+                            }}
+                          >
+                            Masuk untuk membeli
+                          </CustomButton>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -423,6 +447,7 @@ class Detail extends React.Component {
               type="contained"
               className="text-center ml-2"
               onClick={this.buyBtnHandler}
+              disabled
             >
               Beli
             </CustomButton>
@@ -433,4 +458,10 @@ class Detail extends React.Component {
   }
 }
 
-export default Detail;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(Detail);

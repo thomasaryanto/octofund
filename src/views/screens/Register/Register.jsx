@@ -8,6 +8,7 @@ import Axios from "axios";
 import Select from "react-select";
 import { API_URL } from "../../../constants/API";
 import { Overlay } from "react-portal-overlay";
+import { connect } from "react-redux";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -206,6 +207,9 @@ class Register extends React.Component {
   render() {
     if (this.state.isSuccess) {
       return <Redirect to="/login" />;
+    }
+    if (this.props.user.id != 0) {
+      return <Redirect to="/" />;
     }
     return (
       <>
@@ -659,4 +663,10 @@ class Register extends React.Component {
   }
 }
 
-export default Register;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(Register);

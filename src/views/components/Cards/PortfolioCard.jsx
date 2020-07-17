@@ -47,7 +47,7 @@ class PortfolioCard extends React.Component {
                 </div>
                 <div className="col-lg-4">
                   <p className="text-muted small">Harga / unit rata-rata</p>
-                  <p className="pb-3">Rp {avgPrice}</p>
+                  <p className="pb-3">Rp {avgPrice.toFixed(2)}</p>
 
                   <p className="text-muted small">Imbal hasil</p>
                   <p className="pb-3">

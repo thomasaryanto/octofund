@@ -12,7 +12,7 @@ import { connect } from "react-redux";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
 import UserCard from "../../components/Cards/UserCard";
-import ManagerSideBar from "../../components/SideBar/ManagerSideBar";
+import MemberSideBar from "../../components/SideBar/MemberSideBar";
 
 const bankAccountFormInit = {
   accountNumber: "",
@@ -20,7 +20,7 @@ const bankAccountFormInit = {
   bank: null,
 };
 
-class ManagerBankAccount extends React.Component {
+class MemberBankAccount extends React.Component {
   state = {
     bankAccountData: [],
     addDataShow: false,
@@ -250,7 +250,8 @@ class ManagerBankAccount extends React.Component {
         <div className="container-fluid image">
           <div className="w-100 p-5">
             <div className="row">
-              <ManagerSideBar />
+              <MemberSideBar />
+
               <div className="col-lg-9">
                 <div className="card">
                   <div className="card-body">
@@ -431,4 +432,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(ManagerBankAccount);
+export default connect(mapStateToProps)(MemberBankAccount);

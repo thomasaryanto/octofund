@@ -46,7 +46,7 @@ class Payment extends React.Component {
           "Transaksi pembelian akan segera diproses oleh manajer investasi.",
           "success"
         ).then(() => {
-          this.props.history.push(`/transaction`);
+          this.props.history.push(`/member/transaction`);
         });
       })
       .catch((err) => {

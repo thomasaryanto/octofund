@@ -8,8 +8,10 @@ import { API_URL } from "../../../constants/API";
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
+import MemberSideBar from "../../components/SideBar/MemberSideBar";
+import { connect } from "react-redux";
 
-class Profile extends React.Component {
+class MemberProfile extends React.Component {
   state = {
     userData: {
       password: "",
@@ -52,7 +54,7 @@ class Profile extends React.Component {
   };
 
   getUserData = () => {
-    Axios.get(`${API_URL}/users/1`)
+    Axios.get(`${API_URL}/users/${this.props.user.id}`)
       .then((res) => {
         this.setState({
           userData: {
@@ -115,232 +117,122 @@ class Profile extends React.Component {
   render() {
     return (
       <>
-        <section>
+        <div className="container-fluid image">
           <div className="w-100 p-5">
             <div className="row">
-              <div className="col-lg-3">
-                <div className="card">
-                  <div className="card-body">
-                    <h5>Thomas Aryanto</h5>
-                    <p className="pt-2 text-muted">Total investasi</p>
-                    <h5>Rp.2.120.000</h5>
-                    <p className="pt-2 text-muted">Total imbal hasil</p>
-                    <h5 className="pb-2">
-                      Rp.120.000 <small>(+1,8%)</small>
-                    </h5>
-
-                    <hr />
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pt-2"
-                    >
-                      Profil
-                    </CustomButton>
-
-                    <CustomButton type="textual" className="block borderless">
-                      Portfolio
-                    </CustomButton>
-
-                    <CustomButton type="textual" className="block borderless">
-                      Transaksi
-                    </CustomButton>
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pb-2"
-                    >
-                      Pengaturan
-                    </CustomButton>
-
-                    <hr />
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pt-2"
-                    >
-                      Keluar
-                    </CustomButton>
-                  </div>
-                </div>
-              </div>
+              <MemberSideBar />
 
               <div className="col-lg-9">
                 <div className="card">
                   <div className="card-body">
-                    <Accordion defaultActiveKey="0">
-                      <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey="0">
-                          <strong>Data Diri Nasabah </strong>
-                          <p class="float-right">▼</p>
-                        </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="0">
-                          <Card.Body>
+                    <div className="card">
+                      <div class="card-header">
+                        <p>Data Diri Nasabah</p>
+                      </div>
+                      <div className="card-body">
+                        <div className="row">
+                          <div className="col-12">
                             <div className="row">
-                              <div className="col-12">
-                                <div className="row">
-                                  <div className="col-lg-9">
-                                    <p>
-                                      Anda dapat mengubah detail data diri di
-                                      sini, beberapa data mungkin membutuhkan
-                                      verifikasi dari sistem kami.
-                                    </p>
-                                  </div>
-                                  <div className="col-lg-3">
-                                    <div className="float-right">
-                                      <CustomButton
-                                        type="contained"
-                                        className="small bg-primary borderless ml-2"
-                                        onClick={this.editToggle}
-                                      >
-                                        Ubah Profil
-                                      </CustomButton>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                            <hr />
-                            <div className="row">
-                              <div className="col-lg-4">
-                                <strong className="text-muted small">
-                                  Nama sesuai identitas
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.name}
-                                </p>
-
-                                <strong className="text-muted small">
-                                  Email
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.email}
-                                </p>
-
-                                <strong className="text-muted small">
-                                  Tempat Lahir
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.member.birthPlace}
-                                </p>
-
-                                <strong className="text-muted small">
-                                  Jenis Kelamin
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.member.sex}
-                                </p>
-                              </div>
-                              <div className="col-lg-4">
-                                <strong className="text-muted small">
-                                  No. KTP
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.member.identityNumber}
-                                </p>
-
-                                <strong className="text-muted small">
-                                  No. Ponsel
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.phone}
-                                </p>
-
-                                <strong className="text-muted small">
-                                  Tanggal Lahir
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.member.birthDate}
-                                </p>
-
-                                <strong className="text-muted small">
-                                  Alamat
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.member.address}
-                                </p>
-                              </div>
-                              <div className="col-lg-4">
-                                <strong className="text-muted small">
-                                  Pekerjaan
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.member.job}
-                                </p>
-
-                                <strong className="text-muted small">
-                                  Status Pernikahan
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.member.maritalStatus}
-                                </p>
-
-                                <strong className="text-muted small">
-                                  Agama
-                                </strong>
-                                <p className="pb-3">
-                                  {this.state.userData.member.religion}
-                                </p>
-                              </div>
-                            </div>
-                          </Card.Body>
-                        </Accordion.Collapse>
-                      </Card>
-
-                      <Card>
-                        <Accordion.Toggle as={Card.Header} eventKey="1">
-                          <strong>Profil Resiko</strong>
-                          <p class="float-right">▼</p>
-                        </Accordion.Toggle>
-                        <Accordion.Collapse eventKey="1">
-                          <Card.Body>
-                            <div className="row">
-                              <div className="col-lg-4">image</div>
-                              <div className="col-lg-8">
-                                <strong>
-                                  Profil Risiko A (Agresif Rendah)
-                                </strong>
-                                <hr />
+                              <div className="col-lg-9">
                                 <p>
-                                  Tipe ini adalah investor yang kurang menyukai
-                                  risiko dan cenderung menginginkan pokok
-                                  investasinya tidak berkurang, konsekuensinya
-                                  tipe ini rela mendapatkan imbal hasil (return)
-                                  investasinya tidak tinggi. Pengetahuan
-                                  investor tentang industri dan produk Investasi
-                                  tidak terlalu dalam.
+                                  Kamu dapat mengubah detail data diri di sini,
+                                  beberapa data mungkin membutuhkan verifikasi
+                                  dari sistem kami.
                                 </p>
-                                <br />
-                                <p>
-                                  Produk yang cocok untuk tipe ini adalah Reksa
-                                  Dana Pasar Uang dan/atau SBN Ritel. Reksa Dana
-                                  Pasar Uang dapat digunakan untuk investasi
-                                  jangka pendek (kurang dari 1 tahun atau hingga
-                                  1 tahun), sementara SBN Ritel digunakan untuk
-                                  investasi jangka menengah hingga jangka
-                                  panjang.
-                                </p>
-                                <hr />
+                              </div>
+                              <div className="col-lg-3">
                                 <div className="float-right">
                                   <CustomButton
                                     type="contained"
                                     className="small bg-primary borderless ml-2"
+                                    onClick={this.editToggle}
                                   >
-                                    Ubah Profil Resiko
+                                    Ubah Profil
                                   </CustomButton>
                                 </div>
                               </div>
                             </div>
-                          </Card.Body>
-                        </Accordion.Collapse>
-                      </Card>
-                    </Accordion>
+                          </div>
+                        </div>
+                        <hr />
+                        <div className="row">
+                          <div className="col-lg-4">
+                            <strong className="text-muted small">
+                              Nama sesuai identitas
+                            </strong>
+                            <p className="pb-3">{this.state.userData.name}</p>
+
+                            <strong className="text-muted small">Email</strong>
+                            <p className="pb-3">{this.state.userData.email}</p>
+
+                            <strong className="text-muted small">
+                              Tempat Lahir
+                            </strong>
+                            <p className="pb-3">
+                              {this.state.userData.member.birthPlace}
+                            </p>
+
+                            <strong className="text-muted small">
+                              Jenis Kelamin
+                            </strong>
+                            <p className="pb-3">
+                              {this.state.userData.member.sex}
+                            </p>
+                          </div>
+                          <div className="col-lg-4">
+                            <strong className="text-muted small">
+                              No. KTP
+                            </strong>
+                            <p className="pb-3">
+                              {this.state.userData.member.identityNumber}
+                            </p>
+
+                            <strong className="text-muted small">
+                              No. Ponsel
+                            </strong>
+                            <p className="pb-3">{this.state.userData.phone}</p>
+
+                            <strong className="text-muted small">
+                              Tanggal Lahir
+                            </strong>
+                            <p className="pb-3">
+                              {this.state.userData.member.birthDate}
+                            </p>
+
+                            <strong className="text-muted small">Alamat</strong>
+                            <p className="pb-3">
+                              {this.state.userData.member.address}
+                            </p>
+                          </div>
+                          <div className="col-lg-4">
+                            <strong className="text-muted small">
+                              Pekerjaan
+                            </strong>
+                            <p className="pb-3">
+                              {this.state.userData.member.job}
+                            </p>
+
+                            <strong className="text-muted small">
+                              Status Pernikahan
+                            </strong>
+                            <p className="pb-3">
+                              {this.state.userData.member.maritalStatus}
+                            </p>
+
+                            <strong className="text-muted small">Agama</strong>
+                            <p className="pb-3">
+                              {this.state.userData.member.religion}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         <Modal size="lg" show={this.state.editShow} onHide={this.editToggle}>
           <Modal.Header closeButton>
@@ -551,4 +443,10 @@ class Profile extends React.Component {
   }
 }
 
-export default Profile;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(MemberProfile);

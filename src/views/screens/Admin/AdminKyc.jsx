@@ -10,6 +10,7 @@ import Pagination from "react-js-pagination";
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
 import UserCard from "../../components/Cards/UserCard";
+import AdminSideBar from "../../components/SideBar/AdminSideBar";
 
 class AdminKyc extends React.Component {
   state = {
@@ -70,7 +71,7 @@ class AdminKyc extends React.Component {
   };
 
   getUserData = (id) => {
-    Axios.get(`${API_URL}/users/${parseInt(id)}`)
+    Axios.get(`${API_URL}/users/${id}`)
       .then((res) => {
         this.setState({ activeUser: res.data });
       })
@@ -184,55 +185,10 @@ class AdminKyc extends React.Component {
   render() {
     return (
       <>
-        <section>
+        <div className="container-fluid image">
           <div className="w-100 p-5">
             <div className="row">
-              <div className="col-lg-3">
-                <div className="card">
-                  <div className="card-body">
-                    <h5>Thomas Aryanto</h5>
-                    <p className="pt-2 text-muted">Total investasi</p>
-                    <h5>Rp.2.120.000</h5>
-                    <p className="pt-2 text-muted">Total imbal hasil</p>
-                    <h5 className="pb-2">
-                      Rp.120.000 <small>(+1,8%)</small>
-                    </h5>
-
-                    <hr />
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pt-2"
-                    >
-                      Profil
-                    </CustomButton>
-
-                    <CustomButton type="textual" className="block borderless">
-                      Portfolio
-                    </CustomButton>
-
-                    <CustomButton type="textual" className="block borderless">
-                      Transaksi
-                    </CustomButton>
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pb-2"
-                    >
-                      Pengaturan
-                    </CustomButton>
-
-                    <hr />
-
-                    <CustomButton
-                      type="textual"
-                      className="block borderless pt-2"
-                    >
-                      Keluar
-                    </CustomButton>
-                  </div>
-                </div>
-              </div>
+              <AdminSideBar />
               <div className="col-lg-9">
                 <div className="card">
                   <div className="card-body">
@@ -263,7 +219,7 @@ class AdminKyc extends React.Component {
               </div>
             </div>
           </div>
-        </section>
+        </div>
 
         <Modal
           size="lg"

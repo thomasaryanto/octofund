@@ -301,7 +301,7 @@ class Product extends React.Component {
                 {this.state.totalItemsCount > 0 ? (
                   this.renderMutualFunds()
                 ) : (
-                  <h1>Tidak ada data</h1>
+                  <h1>Belum ada data</h1>
                 )}
               </div>
             </div>
