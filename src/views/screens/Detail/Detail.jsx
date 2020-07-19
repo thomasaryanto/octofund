@@ -50,6 +50,7 @@ class Detail extends React.Component {
         companyName: "",
       },
     },
+    transactionCount: 0,
     priceChart: [],
     percentYields: 0,
     positiveYields: false,
@@ -90,6 +91,7 @@ class Detail extends React.Component {
             },
           },
           () => {
+            this.getMutualFundCount();
             this.getBankList();
             this.getPercentYields();
             this.setState({
@@ -106,6 +108,20 @@ class Detail extends React.Component {
             });
           }
         );
+      })
+      .catch((err) => {
+        const errorMessage = err.response
+          ? err.response.data.errors.join("\n")
+          : err.message;
+        this.props.history.push("/");
+        swal("Terjadi kesalahan!", errorMessage, "error");
+      });
+  };
+
+  getMutualFundCount = () => {
+    Axios.get(`${API_URL}/mutualfund/count/${this.props.match.params.id}`)
+      .then((res) => {
+        this.setState({ transactionCount: res.data });
       })
       .catch((err) => {
         const errorMessage = err.response
@@ -316,13 +332,25 @@ class Detail extends React.Component {
                             <tr>
                               <th scope="row">Dana Kelolaan</th>
                               <td className="text-right">
-                                Rp {this.state.mutualFund.totalFund}
+                                {new Intl.NumberFormat("id-ID", {
+                                  style: "currency",
+                                  currency: "IDR",
+                                  minimumIntegerDigits: 1,
+                                  maximumFractionDigits: 0,
+                                  minimumFractionDigits: 0,
+                                }).format(this.state.mutualFund.totalFund)}
                               </td>
                             </tr>
                             <tr>
                               <th scope="row">Minimal Pembelian</th>
                               <td className="text-right">
                                 Rp {this.state.mutualFund.minimumBuy}
+                              </td>
+                            </tr>
+                            <tr>
+                              <th scope="row">Jumlah Transaksi</th>
+                              <td className="text-right">
+                                {this.state.transactionCount} kali
                               </td>
                             </tr>
                             {this.state.mutualFund.limited ? (
