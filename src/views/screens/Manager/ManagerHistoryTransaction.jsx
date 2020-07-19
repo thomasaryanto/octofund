@@ -10,14 +10,13 @@ import { connect } from "react-redux";
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import TransactionCard from "../../components/Cards/TransactionCard";
-import MemberSideBar from "../../components/SideBar/MemberSideBar";
+import ManagerSideBar from "../../components/SideBar/ManagerSideBar";
 
-class MemberTransaction extends React.Component {
+class ManagerHistoryTransaction extends React.Component {
   state = {
     transactionData: [],
     transactionDataShow: false,
     activeTransaction: {
-      date: "",
       transactionStatus: {},
       mutualFund: {},
       member: {},
@@ -53,14 +52,17 @@ class MemberTransaction extends React.Component {
   };
 
   getTransactionListData = (type, page) => {
-    Axios.get(`${API_URL}/transactions/member/${type}/${this.props.user.id}`, {
-      params: {
-        page: page - 1,
-        size: 3,
-        sortKey: "id",
-        sortType: "desc",
-      },
-    })
+    Axios.get(
+      `${API_URL}/transactions/manager/history/${type}/${this.props.match.params.id}`,
+      {
+        params: {
+          page: page - 1,
+          size: 4,
+          sortKey: "id",
+          sortType: "desc",
+        },
+      }
+    )
       .then((res) => {
         const totalPages = res.data.totalPages;
         const itemsCountPerPage = res.data.size;
@@ -118,7 +120,7 @@ class MemberTransaction extends React.Component {
         <div className="container-fluid image">
           <div className="w-100 p-5">
             <div className="row">
-              <MemberSideBar />
+              <ManagerSideBar />
 
               <div className="col-lg-9">
                 <div className="card">
@@ -194,11 +196,7 @@ class MemberTransaction extends React.Component {
               </div>
               <div className="col-lg-4">
                 <strong className="text-muted small">Tanggal Transaksi</strong>
-                <p className="pb-3">
-                  {this.state.activeTransaction.date
-                    .split(".")[0]
-                    .replace("T", " ")}
-                </p>
+                <p className="pb-3">{this.state.activeTransaction.date}</p>
               </div>
               <div className="col-lg-4">
                 <strong className="text-muted small">Nama Produk</strong>
@@ -242,40 +240,16 @@ class MemberTransaction extends React.Component {
                   {this.state.activeTransaction.transactionStatus.name}
                 </p>
               </div>
-              {this.state.activeTransaction.invoice != null ? (
-                <div className="col-lg-4">
-                  <strong className="text-muted small">
-                    Surat Keterangan Transaksi
-                  </strong>
-                  <p className="pb-3">
-                    <a
-                      href={this.state.activeTransaction.invoice}
-                      target="_blank"
-                    >
-                      Unduh
-                    </a>
-                  </p>
-                </div>
-              ) : null}
+              <div className="col-lg-4">
+                <strong className="text-muted small">Pembeli</strong>
+                <p className="pb-3">
+                  {this.state.activeTransaction.memberName}
+                </p>
+              </div>
             </div>
           </Modal.Body>
 
           <Modal.Footer>
-            {this.state.activeTransaction.transactionStatus.id == 1 ||
-            this.state.activeTransaction.transactionStatus.id == 3 ? (
-              <CustomButton
-                type="contained"
-                className="bg-primary borderless"
-                onClick={() => {
-                  this.props.history.push(
-                    `/payment/${this.state.activeTransaction.id}`
-                  );
-                }}
-              >
-                Konfirmasi Pembayaran
-              </CustomButton>
-            ) : null}
-
             <CustomButton
               type="contained"
               className="text-center ml-2"
@@ -298,4 +272,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(MemberTransaction);
+export default connect(mapStateToProps)(ManagerHistoryTransaction);

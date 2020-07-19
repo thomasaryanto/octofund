@@ -9,6 +9,7 @@ type TextFieldProps = {
   onChange?: any;
   value?: any;
   type?: string;
+  pattern?: string;
 };
 
 class TextField extends React.Component<TextFieldProps> {
@@ -18,6 +19,7 @@ class TextField extends React.Component<TextFieldProps> {
         value={this.props.value}
         onChange={this.props.onChange}
         placeholder={this.props.placeholder}
+        pattern={this.props.pattern}
         type={this.props.type || "text"}
         className={`custom-text-input ${this.props.className}`}
         disabled={this.props.disabled}

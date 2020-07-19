@@ -1,6 +1,5 @@
 import React from "react";
 import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import CustomButton from "../CustomButton/CustomButton";
 
 class UserCard extends React.Component {
@@ -14,11 +13,20 @@ class UserCard extends React.Component {
               height="75"
               width="75"
               className="rounded-circle"
+              alt="gambar"
             />
           </div>
           <div className="col-lg-7">
             <p className="text-muted">{this.props.textTop}</p>
-            <strong>{this.props.textMiddle}</strong>
+            {this.props.titleClick ? (
+              <strong>
+                <a href="#" onClick={this.props.titleClick}>
+                  {this.props.textMiddle}
+                </a>
+              </strong>
+            ) : (
+              <strong>{this.props.textMiddle}</strong>
+            )}
             <p className="text-muted">{this.props.textBottom}</p>
           </div>
           <div className="col-lg-3">

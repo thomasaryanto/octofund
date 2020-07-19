@@ -1,6 +1,6 @@
 //libraries
 import React from "react";
-import { Nav, Accordion, Card } from "react-bootstrap";
+import { Accordion, Card } from "react-bootstrap";
 import SignatureCanvas from "react-signature-canvas";
 import { Redirect } from "react-router-dom";
 import swal from "sweetalert";
@@ -9,6 +9,7 @@ import Select from "react-select";
 import { API_URL } from "../../../constants/API";
 import { Overlay } from "react-portal-overlay";
 import { connect } from "react-redux";
+import loading from "../../../assets/images/loading.gif";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -17,7 +18,7 @@ import CustomText from "../../components/CustomText/CustomText";
 class Register extends React.Component {
   state = {
     generalForm: {
-      name: "testing",
+      name: "",
       username: "",
       email: "",
       password: "",
@@ -25,15 +26,13 @@ class Register extends React.Component {
       phone: "",
     },
     detailForm: {
-      identityNumber: Math.floor(Math.random() * 100000),
-      birthDate: "testing",
-      birthPlace: "testing",
-      sex: "testing",
-      religion: "testing",
-      job: "testing",
-      maritalStatus: "testing",
-      address: "testing",
-      signature: "testing",
+      identityNumber: "",
+      sex: "",
+      religion: "",
+      job: "",
+      maritalStatus: "",
+      address: "",
+      signature: "",
     },
     bankForm: {
       accountNumber: "",
@@ -51,6 +50,7 @@ class Register extends React.Component {
     bankList: {},
     isSuccess: false,
     isOverlay: false,
+    isDisabled: true,
   };
 
   sigPad = {};
@@ -76,8 +76,7 @@ class Register extends React.Component {
   }
 
   signatureClear = () => {
-    console.log(this.sigPad.getTrimmedCanvas().toDataURL("image/png"));
-    // this.sigPad.clear();
+    this.sigPad.clear();
   };
 
   inputHandler = (e, field, form) => {
@@ -112,6 +111,105 @@ class Register extends React.Component {
             });
           })
           .catch((err) => {
+            const errorMessage = err.response
+              ? err.response.data.errors.join("\n")
+              : err.message;
+            swal("Terjadi kesalahan!", errorMessage, "error");
+          });
+      }
+    );
+  };
+
+  photoHandlerOCR = (e) => {
+    this.setState(
+      {
+        photoFile: {
+          ...this.state.photoFile,
+          identityPhoto: e.target.files[0],
+        },
+        isOverlay: true,
+      },
+      () => {
+        const data = new FormData();
+        data.append("file", this.state.photoFile.identityPhoto);
+
+        Axios.post(`${API_URL}/users/upload/ktp`, data, { timeout: 300000 })
+          .then((res) => {
+            this.setState({
+              photoForm: {
+                ...this.state.photoForm,
+                identityPhoto: res.data.fileName,
+              },
+              isOverlay: false,
+              isDisabled: false,
+            });
+
+            if (res.data.detectionCount > 1) {
+              this.setState({
+                generalForm: {
+                  ...this.state.generalForm,
+                  name: res.data.name,
+                },
+                detailForm: {
+                  ...this.state.detailForm,
+                  identityNumber: res.data.nik,
+                  address: res.data.address,
+                },
+              });
+
+              if (res.data.sex != null) {
+                this.setState({
+                  detailForm: {
+                    ...this.state.detailForm,
+                    sex: res.data.sex,
+                  },
+                });
+              }
+
+              if (res.data.religion != null) {
+                this.setState({
+                  detailForm: {
+                    ...this.state.detailForm,
+                    religion: res.data.religion,
+                  },
+                });
+              }
+
+              if (res.data.job != null) {
+                this.setState({
+                  detailForm: {
+                    ...this.state.detailForm,
+                    job: res.data.job,
+                  },
+                });
+              }
+
+              if (res.data.marital != null) {
+                this.setState({
+                  detailForm: {
+                    ...this.state.detailForm,
+                    maritalStatus: res.data.marital,
+                  },
+                });
+              }
+              swal(
+                "KTP berhasil terdeteksi!",
+                "Mohon koreksi kembali data diri nasabah yang dimasukan secara otomatis.",
+                "success"
+              );
+            } else {
+              swal(
+                "KTP gagal terdeteksi!",
+                "Kamu tetap dapat memasukan data diri nasabah secara manual.",
+                "warning"
+              );
+            }
+          })
+          .catch((err) => {
+            this.setState({
+              isOverlay: false,
+              isDisabled: false,
+            });
             const errorMessage = err.response
               ? err.response.data.errors.join("\n")
               : err.message;
@@ -198,9 +296,13 @@ class Register extends React.Component {
     });
   };
 
-  testButton = () => {
+  changePhoto = (e, field) => {
     this.setState({
-      isOverlay: true,
+      photoForm: {
+        ...this.state.photoForm,
+        [field]: null,
+      },
+      isDisabled: true,
     });
   };
 
@@ -249,6 +351,7 @@ class Register extends React.Component {
                               </strong>
                               <CustomText
                                 className="mb-3"
+                                type="number"
                                 value={this.state.generalForm.phone}
                                 onChange={(e) =>
                                   this.inputHandler(e, "phone", "generalForm")
@@ -315,6 +418,20 @@ class Register extends React.Component {
                       </Accordion.Toggle>
                       <Accordion.Collapse eventKey="1">
                         <Card.Body>
+                          {this.state.photoForm.identityPhoto ? null : (
+                            <div className="row">
+                              <div className="col-lg-12">
+                                <div
+                                  class="alert alert-info text-center"
+                                  role="alert"
+                                >
+                                  Silahkan upload KTP terlebih dahulu untuk
+                                  pengisian data secara otomatis.
+                                </div>
+                              </div>
+                            </div>
+                          )}
+
                           <div className="row">
                             <div className="col-lg-6">
                               <div>
@@ -323,14 +440,27 @@ class Register extends React.Component {
                                 </strong>
                                 <br />
                                 {this.state.photoForm.identityPhoto ? (
-                                  <b>Upload berhasil!</b>
+                                  <>
+                                    <b>
+                                      Upload berhasil!{" "}
+                                      <a
+                                        href="#"
+                                        onClick={(e) => {
+                                          this.changePhoto(e, "identityPhoto");
+                                        }}
+                                      >
+                                        Ganti
+                                      </a>
+                                    </b>
+                                    <br />
+                                    <br />
+                                  </>
                                 ) : (
                                   <input
                                     type="file"
+                                    accept="image/*"
                                     className="mb-3"
-                                    onChange={(e) =>
-                                      this.photoHandler(e, "identityPhoto")
-                                    }
+                                    onChange={(e) => this.photoHandlerOCR(e)}
                                   />
                                 )}
                               </div>
@@ -341,7 +471,9 @@ class Register extends React.Component {
                                 </strong>
                                 <CustomText
                                   className="mb-3"
-                                  value={Math.floor(Math.random() * 100000)}
+                                  type="number"
+                                  disabled={this.state.isDisabled}
+                                  value={this.state.detailForm.identityNumber}
                                   onChange={(e) =>
                                     this.inputHandler(
                                       e,
@@ -354,28 +486,12 @@ class Register extends React.Component {
 
                               <div>
                                 <strong className="text-muted small">
-                                  Tempat Lahir
-                                </strong>
-                                <CustomText
-                                  className="mb-3"
-                                  value="testing"
-                                  onChange={(e) =>
-                                    this.inputHandler(
-                                      e,
-                                      "birthPlace",
-                                      "detailForm"
-                                    )
-                                  }
-                                />
-                              </div>
-
-                              <div>
-                                <strong className="text-muted small">
                                   Jenis Kelamin
                                 </strong>
                                 <CustomText
                                   className="mb-3"
-                                  value="testing"
+                                  value={this.state.detailForm.sex}
+                                  disabled={this.state.isDisabled}
                                   onChange={(e) =>
                                     this.inputHandler(e, "sex", "detailForm")
                                   }
@@ -388,7 +504,8 @@ class Register extends React.Component {
                                 </strong>
                                 <CustomText
                                   className="mb-3"
-                                  value="testing"
+                                  value={this.state.detailForm.job}
+                                  disabled={this.state.isDisabled}
                                   onChange={(e) =>
                                     this.inputHandler(e, "job", "detailForm")
                                   }
@@ -402,11 +519,26 @@ class Register extends React.Component {
                                 </strong>
                                 <br />
                                 {this.state.photoForm.selfiePhoto ? (
-                                  <b>Upload berhasil!</b>
+                                  <>
+                                    <b>
+                                      Upload berhasil!{" "}
+                                      <a
+                                        href="#"
+                                        onClick={(e) => {
+                                          this.changePhoto(e, "selfiePhoto");
+                                        }}
+                                      >
+                                        Ganti
+                                      </a>
+                                    </b>
+                                    <br />
+                                    <br />
+                                  </>
                                 ) : (
                                   <input
                                     type="file"
                                     className="mb-3"
+                                    accept="image/*"
                                     onChange={(e) =>
                                       this.photoHandler(e, "selfiePhoto")
                                     }
@@ -420,26 +552,10 @@ class Register extends React.Component {
                                 </strong>
                                 <CustomText
                                   className="mb-3"
-                                  value="testing"
+                                  value={this.state.generalForm.name}
+                                  disabled={this.state.isDisabled}
                                   onChange={(e) =>
                                     this.inputHandler(e, "name", "generalForm")
-                                  }
-                                />
-                              </div>
-
-                              <div>
-                                <strong className="text-muted small">
-                                  Tanggal Lahir
-                                </strong>
-                                <CustomText
-                                  className="mb-3"
-                                  value="testing"
-                                  onChange={(e) =>
-                                    this.inputHandler(
-                                      e,
-                                      "birthDate",
-                                      "detailForm"
-                                    )
                                   }
                                 />
                               </div>
@@ -450,7 +566,8 @@ class Register extends React.Component {
                                 </strong>
                                 <CustomText
                                   className="mb-3"
-                                  value="testing"
+                                  value={this.state.detailForm.religion}
+                                  disabled={this.state.isDisabled}
                                   onChange={(e) =>
                                     this.inputHandler(
                                       e,
@@ -467,7 +584,8 @@ class Register extends React.Component {
                                 </strong>
                                 <CustomText
                                   className="mb-3"
-                                  value="testing"
+                                  value={this.state.detailForm.maritalStatus}
+                                  disabled={this.state.isDisabled}
                                   onChange={(e) =>
                                     this.inputHandler(
                                       e,
@@ -487,7 +605,8 @@ class Register extends React.Component {
                                 </strong>
                                 <CustomText
                                   className="mb-3"
-                                  value="testing"
+                                  value={this.state.detailForm.address}
+                                  disabled={this.state.isDisabled}
                                   onChange={(e) =>
                                     this.inputHandler(
                                       e,
@@ -517,6 +636,7 @@ class Register extends React.Component {
                               </strong>
                               <CustomText
                                 className="mb-3"
+                                type="number"
                                 value={this.state.bankForm.accountNumber}
                                 onChange={(e) =>
                                   this.inputHandler(
@@ -649,12 +769,12 @@ class Register extends React.Component {
           <div class="row h-100">
             <div class="col-sm-12 my-auto text-center">
               <img
-                src="http://localhost:8080/users/image/identityPhoto/loading.gif"
+                src={loading}
                 height="100"
                 width="100"
                 className="rounded-circle"
               />
-              <h3 style={{ color: "white" }}>Mengupload gambar...</h3>
+              <h3 style={{ color: "white" }}>Mendeteksi KTP...</h3>
             </div>
           </div>
         </Overlay>

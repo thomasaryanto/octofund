@@ -20,6 +20,7 @@ class ManagerProfile extends React.Component {
       manager: {},
     },
     editShow: false,
+    editLogoFile: "",
   };
 
   componentDidMount() {
@@ -50,7 +51,31 @@ class ManagerProfile extends React.Component {
   };
 
   editToggle = () => {
-    this.setState({ editShow: !this.state.editShow });
+    this.setState({ editShow: !this.state.editShow, editLogoFile: "" });
+  };
+
+  editLogoHandler = (e, field) => {
+    this.setState(
+      {
+        [field]: e.target.files[0],
+      },
+      () => {
+        const data = new FormData();
+        data.append("file", this.state.editLogoFile);
+
+        Axios.post(
+          `${API_URL}/users/upload/manager/${this.props.user.id}/`,
+          data
+        )
+          .then((res) => {})
+          .catch((err) => {
+            const errorMessage = err.response
+              ? err.response.data.errors.join("\n")
+              : err.message;
+            swal("Terjadi kesalahan!", errorMessage, "error");
+          });
+      }
+    );
   };
 
   getUserData = () => {
@@ -75,17 +100,17 @@ class ManagerProfile extends React.Component {
 
   editBtnHandler = () => {
     if (
-      this.state.userData.password != "" ||
-      this.state.userData.retypePassword != ""
+      this.state.userData.password !== "" ||
+      this.state.userData.retypePassword !== ""
     ) {
-      if (this.state.userData.password != this.state.userData.retypePassword) {
+      if (this.state.userData.password !== this.state.userData.retypePassword) {
         return swal(
           "Terjadi kesalahan!",
           "Password dan konfirmasi password harus sama!",
           "error"
         );
       }
-      if (this.state.userData.oldPassword == "") {
+      if (this.state.userData.oldPassword === "") {
         return swal(
           "Terjadi kesalahan!",
           "Password lama harus diisi!",
@@ -266,6 +291,7 @@ class ManagerProfile extends React.Component {
                     <strong className="text-muted small">No Telepon</strong>
                     <CustomText
                       className="mb-3"
+                      type="number"
                       value={this.state.userData.phone}
                       onChange={(e) =>
                         this.inputHandler(e, "phone", "userData")
@@ -274,6 +300,30 @@ class ManagerProfile extends React.Component {
                   </div>
                 </div>
               </Tab>
+
+              <Tab eventKey="logo" title="Logo Manajer">
+                <div className="row mt-3">
+                  <div className="col-lg-12">
+                    <strong className="text-muted small">
+                      Ubah Logo Manajer
+                    </strong>
+                    <br />
+                    {this.state.editLogoFile ? (
+                      <b>Logo berhasil diubah!</b>
+                    ) : (
+                      <input
+                        type="file"
+                        className="mb-3"
+                        accept="image/*"
+                        onChange={(e) =>
+                          this.editLogoHandler(e, "editLogoFile")
+                        }
+                      />
+                    )}
+                  </div>
+                </div>
+              </Tab>
+
               <Tab eventKey="password" title="Ubah Password">
                 <div className="row mt-3">
                   <div className="col-lg-12">

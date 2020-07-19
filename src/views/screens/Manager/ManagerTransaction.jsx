@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
-import UserCard from "../../components/Cards/UserCard";
+import ListCard from "../../components/Cards/ListCard";
 import ManagerSideBar from "../../components/SideBar/ManagerSideBar";
 
 class ManagerTransaction extends React.Component {
@@ -20,6 +20,7 @@ class ManagerTransaction extends React.Component {
     rejectTransactionShow: false,
     rejectMsg: "",
     activeTransaction: {
+      date: "",
       transactionStatus: {},
       mutualFund: {},
       member: {},
@@ -47,9 +48,9 @@ class ManagerTransaction extends React.Component {
 
   getTransactionListData = (page) => {
     Axios.get(
-      `${API_URL}/transactions/manager/${this.props.user.id}?page=${
+      `${API_URL}/transactions/manager/verify/${this.props.user.id}?page=${
         page - 1
-      }&size=2`
+      }&size=4`
     )
       .then((res) => {
         const totalPages = res.data.totalPages;
@@ -101,7 +102,7 @@ class ManagerTransaction extends React.Component {
     return this.state.transactionData.map(
       ({ id, date, mutualFund, totalPrice, paymentProof }) => {
         return (
-          <UserCard
+          <ListCard
             image={paymentProof}
             textTop={this.convertDate(date)}
             textMiddle={mutualFund.name}
@@ -141,6 +142,7 @@ class ManagerTransaction extends React.Component {
         this.getTransactionListData();
       })
       .catch((err) => {
+        console.log(err.response);
         const errorMessage = err.response
           ? err.response.data.errors.join("\n")
           : err.message;
@@ -236,7 +238,11 @@ class ManagerTransaction extends React.Component {
                     <strong className="text-muted small">
                       Tanggal Transaksi
                     </strong>
-                    <p className="pb-3">{this.state.activeTransaction.date}</p>
+                    <p className="pb-3">
+                      {this.state.activeTransaction.date
+                        .split(".")[0]
+                        .replace("T", " ")}
+                    </p>
                   </div>
                   <div className="col-lg-4">
                     <strong className="text-muted small">Nama Produk</strong>
@@ -280,7 +286,17 @@ class ManagerTransaction extends React.Component {
                     <strong className="text-muted small">
                       File Bukti Transfer
                     </strong>
-                    <img src={this.state.activeTransaction.paymentProof} />
+                    <br />
+                    <a
+                      href={this.state.activeTransaction.paymentProof}
+                      target="_blank"
+                    >
+                      <img
+                        src={this.state.activeTransaction.paymentProof}
+                        width="200"
+                        height="100"
+                      />
+                    </a>
                   </div>
                 </div>
               </Tab>

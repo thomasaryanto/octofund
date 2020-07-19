@@ -227,6 +227,7 @@ class AdminProfile extends React.Component {
                     <strong className="text-muted small">No Telepon</strong>
                     <CustomText
                       className="mb-3"
+                      type="number"
                       value={this.state.userData.phone}
                       onChange={(e) =>
                         this.inputHandler(e, "phone", "userData")

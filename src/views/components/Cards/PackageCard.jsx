@@ -1,7 +1,5 @@
 import React from "react";
-import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import CustomButton from "../CustomButton/CustomButton";
 
 class PackageCard extends React.Component {
   render() {

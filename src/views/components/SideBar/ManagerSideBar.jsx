@@ -81,6 +81,18 @@ class ManagerSideBar extends React.Component {
             </Link>
 
             <hr />
+
+            <Link to="/manager/report" style={{ textDecoration: "none" }}>
+              <CustomButton
+                type="textual"
+                className="block borderless"
+                style={{ color: "#007BFF" }}
+              >
+                Report
+              </CustomButton>
+            </Link>
+
+            <hr />
           </div>
         </div>
       </div>

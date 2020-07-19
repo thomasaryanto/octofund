@@ -4,9 +4,9 @@ import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import Pagination from "react-js-pagination";
+import { Helmet } from "react-helmet";
 
 //components
-import CustomButton from "../../components/CustomButton/CustomButton";
 import PackageCard from "../../components/Cards/PackageCard";
 
 class Package extends React.Component {
@@ -32,7 +32,7 @@ class Package extends React.Component {
     Axios.get(`${API_URL}/packages`, {
       params: {
         page: page - 1,
-        size: 2,
+        size: 6,
       },
     })
       .then((res) => {
@@ -61,40 +61,45 @@ class Package extends React.Component {
 
   render() {
     return (
-      <div className="container-fluid p-0">
-        <section className="d-flex align-items-center text-center header image">
-          <div className="w-100 p-5">
-            <h1 className="white">Paket Reksa Dana</h1>
-            <p className="white">Pilih paket reksa dana impianmu sekarang!</p>
-          </div>
-        </section>
-        <section>
-          <div className="w-100 p-5">
-            <div className="row">
-              {this.state.totalItemsCount > 0 ? (
-                this.renderMutualFundPackages()
-              ) : (
-                <h1>Belum ada data</h1>
-              )}
+      <>
+        <Helmet>
+          <style>{"body { background: #f4f5f4 !important; }"}</style>
+        </Helmet>
+        <div className="container-fluid p-0">
+          <section className="d-flex align-items-center text-center header image">
+            <div className="w-100 p-5">
+              <h1 className="white">Paket Reksa Dana</h1>
+              <p className="white">Pilih paket reksa dana impianmu sekarang!</p>
             </div>
-          </div>
+          </section>
+          <section>
+            <div className="w-100 p-5">
+              <div className="row">
+                {this.state.totalItemsCount > 0 ? (
+                  this.renderMutualFundPackages()
+                ) : (
+                  <h3 className="text-center">belum ada data.</h3>
+                )}
+              </div>
+            </div>
 
-          <div className="text-center pb-5">
-            <Pagination
-              hideDisabled
-              hideNavigation
-              activePage={this.state.activePage}
-              itemsCountPerPage={this.state.itemsCountPerPage}
-              totalItemsCount={this.state.totalItemsCount}
-              pageRangeDisplayed={10}
-              itemClass="page-item"
-              linkClass="page-link"
-              innerClass="pagination justify-content-center"
-              onChange={this.pageChangeHandler.bind(this)}
-            />
-          </div>
-        </section>
-      </div>
+            <div className="text-center pb-5">
+              <Pagination
+                hideDisabled
+                hideNavigation
+                activePage={this.state.activePage}
+                itemsCountPerPage={this.state.itemsCountPerPage}
+                totalItemsCount={this.state.totalItemsCount}
+                pageRangeDisplayed={10}
+                itemClass="page-item"
+                linkClass="page-link"
+                innerClass="pagination justify-content-center"
+                onChange={this.pageChangeHandler.bind(this)}
+              />
+            </div>
+          </section>
+        </div>
+      </>
     );
   }
 }

@@ -1,6 +1,6 @@
 //libraries
 import React from "react";
-import { Modal, Card, Tabs, Tab } from "react-bootstrap";
+import { Modal, Tabs, Tab } from "react-bootstrap";
 import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
@@ -9,7 +9,7 @@ import Pagination from "react-js-pagination";
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
-import UserCard from "../../components/Cards/UserCard";
+import ListCard from "../../components/Cards/ListCard";
 import AdminSideBar from "../../components/SideBar/AdminSideBar";
 
 const generalFormInit = {
@@ -53,6 +53,9 @@ class AdminManager extends React.Component {
     managerForm: {
       ...managerFormInit,
     },
+    logoForm: "",
+    logoFile: "",
+    editLogoFile: "",
     activePage: 1,
     totalPages: null,
     itemsCountPerPage: null,
@@ -92,8 +95,57 @@ class AdminManager extends React.Component {
     });
   };
 
+  logoHandler = (e, field) => {
+    this.setState(
+      {
+        [field]: e.target.files[0],
+      },
+      () => {
+        const data = new FormData();
+        data.append("file", this.state.logoFile);
+
+        Axios.post(`${API_URL}/users/upload/`, data)
+          .then((res) => {
+            this.setState({
+              logoForm: res.data.fileName,
+            });
+          })
+          .catch((err) => {
+            const errorMessage = err.response
+              ? err.response.data.errors.join("\n")
+              : err.message;
+            swal("Terjadi kesalahan!", errorMessage, "error");
+          });
+      }
+    );
+  };
+
+  editLogoHandler = (e, field) => {
+    this.setState(
+      {
+        [field]: e.target.files[0],
+      },
+      () => {
+        const data = new FormData();
+        data.append("file", this.state.editLogoFile);
+
+        Axios.post(
+          `${API_URL}/users/upload/manager/${this.state.activeUser.id}/`,
+          data
+        )
+          .then((res) => {})
+          .catch((err) => {
+            const errorMessage = err.response
+              ? err.response.data.errors.join("\n")
+              : err.message;
+            swal("Terjadi kesalahan!", errorMessage, "error");
+          });
+      }
+    );
+  };
+
   getUserListData = (page) => {
-    Axios.get(`${API_URL}/users/role/2?page=${page - 1}&size=2`)
+    Axios.get(`${API_URL}/users/role/2?page=${page - 1}&size=4`)
       .then((res) => {
         const totalPages = res.data.totalPages;
         const itemsCountPerPage = res.data.size;
@@ -134,7 +186,7 @@ class AdminManager extends React.Component {
   renderUsers = () => {
     return this.state.userData.map(({ manager, id, name }) => {
       return (
-        <UserCard
+        <ListCard
           image={manager.logo}
           textTop={name}
           textMiddle={manager.companyName}
@@ -151,7 +203,7 @@ class AdminManager extends React.Component {
   };
 
   editDataToggle = () => {
-    this.setState({ editDataShow: !this.state.editDataShow });
+    this.setState({ editDataShow: !this.state.editDataShow, editLogoFile: "" });
   };
 
   editBtnHandler = (id) => {
@@ -202,6 +254,7 @@ class AdminManager extends React.Component {
           ...this.state.generalForm,
         },
         ...this.state.managerForm,
+        logo: this.state.logoForm,
       };
       Axios.post(`${API_URL}/users/manager`, userData)
         .then((res) => {
@@ -218,6 +271,8 @@ class AdminManager extends React.Component {
             managerForm: {
               ...managerFormInit,
             },
+            logoForm: "",
+            logoFile: "",
           });
           this.getUserListData(this.state.activePage);
         })
@@ -382,6 +437,7 @@ class AdminManager extends React.Component {
                 <strong className="text-muted small">No Telepon</strong>
                 <CustomText
                   className="mb-3"
+                  type="number"
                   value={this.state.generalForm.phone}
                   onChange={(e) => this.inputHandler(e, "phone", "generalForm")}
                 />
@@ -419,11 +475,17 @@ class AdminManager extends React.Component {
                 />
 
                 <strong className="text-muted small">Logo</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.managerForm.logo}
-                  onChange={(e) => this.inputHandler(e, "logo", "managerForm")}
-                />
+                <br />
+                {this.state.logoForm ? (
+                  <b>Upload berhasil!</b>
+                ) : (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="mb-3"
+                    onChange={(e) => this.logoHandler(e, "logoFile")}
+                  />
+                )}
               </div>
             </div>
           </Modal.Body>
@@ -452,106 +514,134 @@ class AdminManager extends React.Component {
           </Modal.Header>
 
           <Modal.Body>
-            <div className="row">
-              <div className="col-lg-12">
-                <strong className="text-muted small">Nama Perusahaan</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.activeUser.manager.companyName}
-                  onChange={(e) =>
-                    this.inputNestedHandler(
-                      e,
-                      "companyName",
-                      "manager",
-                      "activeUser"
-                    )
-                  }
-                />
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-lg-6">
-                <strong className="text-muted small">
-                  Nama Penanggung Jawab
-                </strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.activeUser.name}
-                  onChange={(e) => this.inputHandler(e, "name", "activeUser")}
-                />
+            <Tabs defaultActiveKey="data">
+              <Tab eventKey="data" title="Data Manajer">
+                <div className="row">
+                  <div className="col-lg-12">
+                    <strong className="text-muted small">
+                      Nama Perusahaan
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      value={this.state.activeUser.manager.companyName}
+                      onChange={(e) =>
+                        this.inputNestedHandler(
+                          e,
+                          "companyName",
+                          "manager",
+                          "activeUser"
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-lg-6">
+                    <strong className="text-muted small">
+                      Nama Penanggung Jawab
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      value={this.state.activeUser.name}
+                      onChange={(e) =>
+                        this.inputHandler(e, "name", "activeUser")
+                      }
+                    />
 
-                <strong className="text-muted small">Alamat Email</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.activeUser.email}
-                  onChange={(e) => this.inputHandler(e, "email", "activeUser")}
-                />
+                    <strong className="text-muted small">Alamat Email</strong>
+                    <CustomText
+                      className="mb-3"
+                      value={this.state.activeUser.email}
+                      onChange={(e) =>
+                        this.inputHandler(e, "email", "activeUser")
+                      }
+                    />
 
-                <strong className="text-muted small">Username</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.activeUser.username}
-                  onChange={(e) =>
-                    this.inputHandler(e, "username", "activeUser")
-                  }
-                />
+                    <strong className="text-muted small">Username</strong>
+                    <CustomText
+                      className="mb-3"
+                      value={this.state.activeUser.username}
+                      onChange={(e) =>
+                        this.inputHandler(e, "username", "activeUser")
+                      }
+                    />
 
-                <strong className="text-muted small">No Telepon</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.activeUser.phone}
-                  onChange={(e) => this.inputHandler(e, "phone", "activeUser")}
-                />
-              </div>
-              <div className="col-lg-6">
-                <strong className="text-muted small">Kata Sandi Baru</strong>
-                <CustomText
-                  className="mb-3"
-                  type="password"
-                  placeholder="Kosongkan jika tidak ingin diganti"
-                  value={this.state.activeUser.password}
-                  onChange={(e) =>
-                    this.inputHandler(e, "password", "activeUser")
-                  }
-                />
+                    <strong className="text-muted small">No Telepon</strong>
+                    <CustomText
+                      className="mb-3"
+                      value={this.state.activeUser.phone}
+                      onChange={(e) =>
+                        this.inputHandler(e, "phone", "activeUser")
+                      }
+                    />
+                  </div>
+                  <div className="col-lg-6">
+                    <strong className="text-muted small">
+                      Kata Sandi Baru
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      type="password"
+                      placeholder="Kosongkan jika tidak ingin diganti"
+                      value={this.state.activeUser.password}
+                      onChange={(e) =>
+                        this.inputHandler(e, "password", "activeUser")
+                      }
+                    />
 
-                <strong className="text-muted small mt-3">
-                  Konfirmasi Kata Sandi Baru
-                </strong>
-                <CustomText
-                  className="mb-3"
-                  type="password"
-                  placeholder="Kosongkan jika tidak ingin diganti"
-                  value={this.state.activeUser.retypePassword}
-                  onChange={(e) =>
-                    this.inputHandler(e, "retypePassword", "activeUser")
-                  }
-                />
+                    <strong className="text-muted small mt-3">
+                      Konfirmasi Kata Sandi Baru
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      type="password"
+                      placeholder="Kosongkan jika tidak ingin diganti"
+                      value={this.state.activeUser.retypePassword}
+                      onChange={(e) =>
+                        this.inputHandler(e, "retypePassword", "activeUser")
+                      }
+                    />
 
-                <strong className="text-muted small">Website</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.activeUser.manager.website}
-                  onChange={(e) =>
-                    this.inputNestedHandler(
-                      e,
-                      "website",
-                      "manager",
-                      "activeUser"
-                    )
-                  }
-                />
+                    <strong className="text-muted small">Website</strong>
+                    <CustomText
+                      className="mb-3"
+                      value={this.state.activeUser.manager.website}
+                      onChange={(e) =>
+                        this.inputNestedHandler(
+                          e,
+                          "website",
+                          "manager",
+                          "activeUser"
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </Tab>
 
-                <strong className="text-muted small">Logo</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.activeUser.manager.logo}
-                  onChange={(e) =>
-                    this.inputNestedHandler(e, "logo", "manager", "activeUser")
-                  }
-                />
-              </div>
-            </div>
+              <Tab eventKey="logo" title="Logo Manajer">
+                <div className="row mt-3">
+                  <div className="col-lg-12">
+                    <strong className="text-muted small">
+                      Ubah Logo Manajer
+                    </strong>
+                    <br />
+                    {this.state.editLogoFile ? (
+                      <b>Logo berhasil diubah!</b>
+                    ) : (
+                      <input
+                        type="file"
+                        className="mb-3"
+                        accept="image/*"
+                        onChange={(e) =>
+                          this.editLogoHandler(e, "editLogoFile")
+                        }
+                      />
+                    )}
+                  </div>
+                </div>
+              </Tab>
+            </Tabs>
           </Modal.Body>
 
           <Modal.Footer>

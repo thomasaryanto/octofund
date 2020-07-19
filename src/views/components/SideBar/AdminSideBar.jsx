@@ -25,6 +25,18 @@ class AdminSideBar extends React.Component {
 
             <hr />
 
+            <Link to="/admin/kyc" style={{ textDecoration: "none" }}>
+              <CustomButton
+                type="textual"
+                className="block borderless"
+                style={{ color: "#007BFF" }}
+              >
+                Verifikasi Nasabah
+              </CustomButton>
+            </Link>
+
+            <hr />
+
             <Link to="/admin/member" style={{ textDecoration: "none" }}>
               <CustomButton
                 type="textual"

@@ -6,6 +6,7 @@ import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import { connect } from "react-redux";
 import Select from "react-select";
+import { Helmet } from "react-helmet";
 import {
   AreaChart,
   Area,
@@ -34,6 +35,8 @@ class Detail extends React.Component {
       factsheetFile: "",
       limited: false,
       stock: 0,
+      mutualFundCategory: {},
+      mutualFundType: {},
       priceHistory: [
         {
           date: "",
@@ -49,6 +52,7 @@ class Detail extends React.Component {
     },
     priceChart: [],
     percentYields: 0,
+    positiveYields: false,
     bankList: {},
     bankAccount: null,
     totalBuy: 100000,
@@ -89,7 +93,16 @@ class Detail extends React.Component {
             this.getBankList();
             this.getPercentYields();
             this.setState({
-              priceChart: [...this.state.mutualFund.priceHistory].reverse(),
+              priceChart: [...this.state.mutualFund.priceHistory],
+            });
+
+            this.setState({
+              priceChart: this.state.mutualFund.priceHistory.map(
+                ({ date, price }) => ({
+                  price,
+                  date: date.split(".")[0].replace("T", " ").split(" ")[0],
+                })
+              ),
             });
           }
         );
@@ -98,19 +111,42 @@ class Detail extends React.Component {
         const errorMessage = err.response
           ? err.response.data.errors.join("\n")
           : err.message;
+        this.props.history.push("/");
         swal("Terjadi kesalahan!", errorMessage, "error");
       });
   };
 
   getPercentYields = () => {
-    const countPercentYields = (
-      ((this.state.mutualFund.priceHistory[0].price -
-        this.state.mutualFund.priceHistory[1].price) /
-        this.state.mutualFund.priceHistory[0].price) *
-      100
-    ).toFixed(2);
+    const countPercentYields = Math.abs(
+      (
+        ((this.state.mutualFund.priceHistory[
+          this.state.mutualFund.priceHistory.length - 2
+        ].price -
+          this.state.mutualFund.priceHistory[
+            this.state.mutualFund.priceHistory.length - 1
+          ].price) /
+          this.state.mutualFund.priceHistory[
+            this.state.mutualFund.priceHistory.length - 2
+          ].price) *
+        100
+      ).toFixed(2)
+    );
 
-    this.setState({ percentYields: countPercentYields });
+    const positiveYields =
+      this.state.mutualFund.priceHistory[
+        this.state.mutualFund.priceHistory.length - 2
+      ].price -
+        this.state.mutualFund.priceHistory[
+          this.state.mutualFund.priceHistory.length - 1
+        ].price <=
+      0
+        ? true
+        : false;
+
+    this.setState({
+      percentYields: countPercentYields,
+      positiveYields: positiveYields,
+    });
   };
 
   getBankList = () => {
@@ -142,11 +178,12 @@ class Detail extends React.Component {
       managerName: this.state.mutualFund.manager.companyName,
       bankName: this.state.bankAccount.name,
       totalPrice: this.state.totalBuy,
+      memberName: this.props.user.name,
       mutualFund: {
         id: this.state.mutualFund.id,
       },
       member: {
-        id: 1,
+        id: this.props.user.id,
       },
     };
     Axios.post(`${API_URL}/transactions/buy`, transactionData)
@@ -170,6 +207,9 @@ class Detail extends React.Component {
   render() {
     return (
       <>
+        <Helmet>
+          <style>{"body { background: #f4f5f4 !important; }"}</style>
+        </Helmet>
         <div className="container-fluid p-0">
           <section className="d-flex align-items-center text-center header image">
             <div className="w-100 p-5">
@@ -186,34 +226,28 @@ class Detail extends React.Component {
                   <div class="card shadow-sm mb-4">
                     <div className="card-body p-3">
                       <div className="row">
-                        <div className="col-lg-6">
+                        <div className="col-lg-9">
                           <h2 className="pb-0 mb-0">
                             <strong>
                               Rp {this.state.mutualFund.lastPrice}{" "}
                             </strong>
                             <small class="text-muted"> / unit</small>
-                            <p>{this.state.percentYields}% dari hari kemarin</p>
                           </h2>
                         </div>
-                        <div className="col-lg-6 d-flex pt-3 pt-lg-0">
-                          <Nav
-                            variant="pills"
-                            defaultActiveKey="minggu"
-                            className="ml-lg-auto"
-                          >
-                            <Nav.Item>
-                              <Nav.Link eventKey="minggu">Minggu</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                              <Nav.Link eventKey="bulan">Bulan</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                              <Nav.Link eventKey="tahun">Tahun</Nav.Link>
-                            </Nav.Item>
-                            <Nav.Item>
-                              <Nav.Link eventKey="lima-tahun">5 Tahun</Nav.Link>
-                            </Nav.Item>
-                          </Nav>
+                        <div className="col-lg-3 d-flex pt-3 pt-lg-0">
+                          <div class="ml-auto">
+                            <strong>
+                              {this.state.positiveYields ? (
+                                <p className="text-success">
+                                  +{this.state.percentYields}% dari hari kemarin
+                                </p>
+                              ) : (
+                                <p className="text-danger">
+                                  -{this.state.percentYields}% dari hari kemarin
+                                </p>
+                              )}
+                            </strong>
+                          </div>
                         </div>
                       </div>
                       <div className="row">
@@ -261,13 +295,16 @@ class Detail extends React.Component {
                         <table class="table table-sm table-borderless table-hover">
                           <tbody>
                             <tr>
-                              <th scope="row">Jenis Reksa Dana</th>
-                              <td className="text-right">Pendapatan Tetap</td>
+                              <th scope="row">Tipe Reksadana</th>
+                              <td className="text-right">
+                                {" "}
+                                {this.state.mutualFund.mutualFundType.name}
+                              </td>
                             </tr>
                             <tr>
-                              <th scope="row">Tanggal Diluncurkan</th>
+                              <th scope="row">Jenis Reksadana</th>
                               <td className="text-right">
-                                {this.state.mutualFund.launchDate}
+                                {this.state.mutualFund.mutualFundCategory.name}
                               </td>
                             </tr>
                             <tr>

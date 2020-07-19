@@ -3,6 +3,7 @@ import React from "react";
 import { Route, Switch, withRouter } from "react-router-dom";
 import Cookie from "universal-cookie";
 import { connect } from "react-redux";
+import SimpleReactLightbox from "simple-react-lightbox";
 
 //redux
 import { userKeepLogin, cookieChecker } from "./redux/actions";
@@ -41,6 +42,9 @@ import NotFound from "./views/screens/Error/NotFound";
 import ManagerProfile from "./views/screens/Manager/ManagerProfile";
 import AdminProfile from "./views/screens/Admin/AdminProfile";
 import AdminBank from "./views/screens/Admin/AdminBank";
+import AdminMember from "./views/screens/Admin/AdminMember";
+import ManagerHistoryTransaction from "./views/screens/Manager/ManagerHistoryTransaction";
+import ManagerReport from "./views/screens/Manager/ManagerReport";
 
 const cookieObj = new Cookie();
 
@@ -60,7 +64,9 @@ class App extends React.Component {
       return (
         <>
           <Route exact path="/admin" component={AdminProfile} />
-          <Route exact path="/admin/member" component={AdminKyc} />
+          <Route exact path="/admin/kyc" component={AdminKyc} />
+
+          <Route exact path="/admin/member" component={AdminMember} />
           <Route exact path="/admin/manager" component={AdminManager} />
           <Route exact path="/admin/bank" component={AdminBank} />
           <Route exact path="/admin/report" component={AdminReport} />
@@ -87,9 +93,15 @@ class App extends React.Component {
           />
           <Route
             exact
+            path="/manager/history/:id"
+            component={ManagerHistoryTransaction}
+          />
+          <Route
+            exact
             path="/manager/bankaccount"
             component={ManagerBankAccount}
           />
+          <Route exact path="/manager/report" component={ManagerReport} />
         </>
       );
     } else if (this.props.user.role.id == 3) {
@@ -112,7 +124,7 @@ class App extends React.Component {
     } else {
       return (
         <>
-          <Route path="*" component={NotFound} />
+          <Route exact path="*" component={NotFound} />;
         </>
       );
     }

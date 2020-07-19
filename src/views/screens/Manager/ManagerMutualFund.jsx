@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
-import UserCard from "../../components/Cards/UserCard";
+import ListCard from "../../components/Cards/ListCard";
 import ManagerSideBar from "../../components/SideBar/ManagerSideBar";
 
 const mutualFundFormInit = {
@@ -21,6 +21,7 @@ const mutualFundFormInit = {
   totalFund: "",
   custodyBank: "",
   lastPrice: 0.0,
+  stock: 0,
   mutualFundCategory: null,
   mutualFundType: null,
 };
@@ -43,6 +44,7 @@ class ManagerMutualFund extends React.Component {
       totalFund: "",
       custodyBank: "",
       lastPrice: 0.0,
+      stock: 0,
       prospectusFile: "",
       factsheetFile: "",
       mutualFundCategory: null,
@@ -183,7 +185,7 @@ class ManagerMutualFund extends React.Component {
     Axios.get(
       `${API_URL}/mutualfund/manager/${this.props.user.id}?page=${
         page - 1
-      }&size=2`
+      }&size=4`
     )
       .then((res) => {
         const totalPages = res.data.totalPages;
@@ -269,11 +271,14 @@ class ManagerMutualFund extends React.Component {
     return this.state.mutualFundData.map(
       ({ manager, id, name, custodyBank }) => {
         return (
-          <UserCard
+          <ListCard
             image={manager.logo}
             textTop={manager.companyName}
             textMiddle={name}
             textBottom={custodyBank}
+            titleClick={() => {
+              this.props.history.push(`/manager/history/${id}`);
+            }}
             editClick={() => {
               this.editBtnHandler(id);
             }}
@@ -287,7 +292,10 @@ class ManagerMutualFund extends React.Component {
   };
 
   editDataToggle = () => {
-    this.setState({ editDataShow: !this.state.editDataShow });
+    this.setState({
+      editDataShow: !this.state.editDataShow,
+      editDocumentForm: { ...documentInit },
+    });
   };
 
   editBtnHandler = (id) => {
@@ -457,130 +465,160 @@ class ManagerMutualFund extends React.Component {
           </Modal.Header>
 
           <Modal.Body>
-            <div className="row">
-              <div className="col-lg-6">
-                <strong className="text-muted small">Nama Reksadana</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.mutualFundForm.name}
-                  onChange={(e) =>
-                    this.inputHandler(e, "name", "mutualFundForm")
-                  }
-                />
+            <Tabs defaultActiveKey="data">
+              <Tab eventKey="data" title="Data Reksadana">
+                <div className="row mt-3">
+                  <div className="col-lg-12">
+                    <strong className="text-muted small">Nama Reksadana</strong>
+                    <CustomText
+                      className="mb-3"
+                      value={this.state.mutualFundForm.name}
+                      onChange={(e) =>
+                        this.inputHandler(e, "name", "mutualFundForm")
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="row">
+                  <div className="col-lg-6">
+                    <strong className="text-muted small">
+                      Jenis Reksadana
+                    </strong>
+                    <Select
+                      value={this.state.mutualFundForm.mutualFundType}
+                      getOptionValue={(option) => option.id}
+                      getOptionLabel={(option) => option.name}
+                      onChange={(e) => {
+                        this.selectChangeHandler(
+                          e,
+                          "mutualFundType",
+                          "mutualFundForm"
+                        );
+                      }}
+                      options={this.state.typeList}
+                      placeholder="Pilih Jenis Reksadana..."
+                      className="mb-3"
+                    />
 
-                <strong className="text-muted small">Jenis Reksadana</strong>
-                <Select
-                  value={this.state.mutualFundForm.mutualFundType}
-                  getOptionValue={(option) => option.id}
-                  getOptionLabel={(option) => option.name}
-                  onChange={(e) => {
-                    this.selectChangeHandler(
-                      e,
-                      "mutualFundType",
-                      "mutualFundForm"
-                    );
-                  }}
-                  options={this.state.typeList}
-                  placeholder="Pilih Jenis Reksadana..."
-                  className="mb-3"
-                />
+                    <strong className="text-muted small">
+                      Nama Bank Kustodian
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      value={this.state.mutualFundForm.custodyBank}
+                      onChange={(e) =>
+                        this.inputHandler(e, "custodyBank", "mutualFundForm")
+                      }
+                    />
 
-                <strong className="text-muted small">
-                  Nama Bank Kustodian
-                </strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.mutualFundForm.custodyBank}
-                  onChange={(e) =>
-                    this.inputHandler(e, "custodyBank", "mutualFundForm")
-                  }
-                />
+                    <strong className="text-muted small">
+                      Harga Unit (Rp)
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      type="number"
+                      value={this.state.mutualFundForm.lastPrice}
+                      onChange={(e) =>
+                        this.inputHandler(e, "lastPrice", "mutualFundForm")
+                      }
+                    />
 
-                <strong className="text-muted small">
-                  Tanggal Diluncurkan
-                </strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.mutualFundForm.launchDate}
-                  onChange={(e) =>
-                    this.inputHandler(e, "launchDate", "mutualFundForm")
-                  }
-                />
+                    <strong className="text-muted small">
+                      Dokumen Prospectus
+                    </strong>
+                    <br />
+                    {this.state.documentForm.prospectusFile ? (
+                      <b>Upload berhasil!</b>
+                    ) : (
+                      <input
+                        type="file"
+                        className="mb-3"
+                        onChange={(e) =>
+                          this.documentHandler(e, "prospectusFile")
+                        }
+                      />
+                    )}
+                  </div>
+                  <div className="col-lg-6">
+                    <strong className="text-muted small">
+                      Kategori Reksadana
+                    </strong>
+                    <Select
+                      value={this.state.mutualFundForm.mutualFundCategory}
+                      getOptionValue={(option) => option.id}
+                      getOptionLabel={(option) => option.name}
+                      onChange={(e) => {
+                        this.selectChangeHandler(
+                          e,
+                          "mutualFundCategory",
+                          "mutualFundForm"
+                        );
+                      }}
+                      options={this.state.categoryList}
+                      placeholder="Pilih Kategori Reksadana..."
+                      className="mb-3"
+                    />
 
-                <strong className="text-muted small">Dokumen Prospectus</strong>
-                <br />
-                {this.state.documentForm.prospectusFile ? (
-                  <b>Upload berhasil!</b>
-                ) : (
-                  <input
-                    type="file"
-                    className="mb-3"
-                    onChange={(e) => this.documentHandler(e, "prospectusFile")}
-                  />
-                )}
-              </div>
-              <div className="col-lg-6">
-                <strong className="text-muted small">Harga Unit</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.mutualFundForm.lastPrice}
-                  onChange={(e) =>
-                    this.inputHandler(e, "lastPrice", "mutualFundForm")
-                  }
-                />
+                    <strong className="text-muted small">
+                      Total Dana Kelolaan (Rp)
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      type="number"
+                      value={this.state.mutualFundForm.totalFund}
+                      onChange={(e) =>
+                        this.inputHandler(e, "totalFund", "mutualFundForm")
+                      }
+                    />
 
-                <strong className="text-muted small">Kategori Reksadana</strong>
-                <Select
-                  value={this.state.mutualFundForm.mutualFundCategory}
-                  getOptionValue={(option) => option.id}
-                  getOptionLabel={(option) => option.name}
-                  onChange={(e) => {
-                    this.selectChangeHandler(
-                      e,
-                      "mutualFundCategory",
-                      "mutualFundForm"
-                    );
-                  }}
-                  options={this.state.categoryList}
-                  placeholder="Pilih Kategori Reksadana..."
-                  className="mb-3"
-                />
+                    <strong className="text-muted small">
+                      Minimal Pembelian (Rp)
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      type="number"
+                      value={this.state.mutualFundForm.minimumBuy}
+                      onChange={(e) =>
+                        this.inputHandler(e, "minimumBuy", "mutualFundForm")
+                      }
+                    />
 
-                <strong className="text-muted small">
-                  Total Dana Kelolaan
-                </strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.mutualFundForm.totalFund}
-                  onChange={(e) =>
-                    this.inputHandler(e, "totalFund", "mutualFundForm")
-                  }
-                />
-
-                <strong className="text-muted small">Minimal Pembelian</strong>
-                <CustomText
-                  className="mb-3"
-                  value={this.state.mutualFundForm.minimumBuy}
-                  onChange={(e) =>
-                    this.inputHandler(e, "minimumBuy", "mutualFundForm")
-                  }
-                />
-
-                <strong className="text-muted small">
-                  Dokumen Fund Fact Sheet
-                </strong>
-                <br />
-                {this.state.documentForm.factsheetFile ? (
-                  <b>Upload berhasil!</b>
-                ) : (
-                  <input
-                    type="file"
-                    className="mb-3"
-                    onChange={(e) => this.documentHandler(e, "factsheetFile")}
-                  />
-                )}
-              </div>
-            </div>
+                    <strong className="text-muted small">
+                      Dokumen Fund Fact Sheet
+                    </strong>
+                    <br />
+                    {this.state.documentForm.factsheetFile ? (
+                      <b>Upload berhasil!</b>
+                    ) : (
+                      <input
+                        type="file"
+                        className="mb-3"
+                        onChange={(e) =>
+                          this.documentHandler(e, "factsheetFile")
+                        }
+                      />
+                    )}
+                  </div>
+                </div>
+              </Tab>
+              <Tab eventKey="stock" title="Penjualan Terbatas">
+                <div className="row mt-3">
+                  <div className="col-lg-12">
+                    <strong className="text-muted small">
+                      Stok Unit (0 = tidak terbatas)
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      type="number"
+                      value={this.state.mutualFundForm.stock}
+                      onChange={(e) =>
+                        this.inputHandler(e, "stock", "mutualFundForm")
+                      }
+                    />
+                  </div>
+                </div>
+              </Tab>
+            </Tabs>
           </Modal.Body>
 
           <Modal.Footer>
@@ -639,38 +677,6 @@ class ManagerMutualFund extends React.Component {
                     />
 
                     <strong className="text-muted small">
-                      Nama Bank Kustodian
-                    </strong>
-                    <CustomText
-                      className="mb-3"
-                      value={this.state.activeMutualFund.custodyBank}
-                      onChange={(e) =>
-                        this.inputHandler(e, "custodyBank", "activeMutualFund")
-                      }
-                    />
-
-                    <strong className="text-muted small">
-                      Tanggal Diluncurkan
-                    </strong>
-                    <CustomText
-                      className="mb-3"
-                      value={this.state.activeMutualFund.launchDate}
-                      onChange={(e) =>
-                        this.inputHandler(e, "launchDate", "activeMutualFund")
-                      }
-                    />
-                  </div>
-                  <div className="col-lg-6">
-                    <strong className="text-muted small">Harga Unit</strong>
-                    <CustomText
-                      className="mb-3"
-                      value={this.state.activeMutualFund.lastPrice}
-                      onChange={(e) =>
-                        this.inputHandler(e, "lastPrice", "activeMutualFund")
-                      }
-                    />
-
-                    <strong className="text-muted small">
                       Kategori Reksadana
                     </strong>
                     <Select
@@ -687,12 +693,25 @@ class ManagerMutualFund extends React.Component {
                       options={this.state.categoryList}
                       className="mb-3"
                     />
-
+                  </div>
+                  <div className="col-lg-6">
                     <strong className="text-muted small">
-                      Total Dana Kelolaan
+                      Nama Bank Kustodian
                     </strong>
                     <CustomText
                       className="mb-3"
+                      value={this.state.activeMutualFund.custodyBank}
+                      onChange={(e) =>
+                        this.inputHandler(e, "custodyBank", "activeMutualFund")
+                      }
+                    />
+
+                    <strong className="text-muted small">
+                      Total Dana Kelolaan (Rp)
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      type="number"
                       value={this.state.activeMutualFund.totalFund}
                       onChange={(e) =>
                         this.inputHandler(e, "totalFund", "activeMutualFund")
@@ -700,10 +719,11 @@ class ManagerMutualFund extends React.Component {
                     />
 
                     <strong className="text-muted small">
-                      Minimal Pembelian
+                      Minimal Pembelian (Rp)
                     </strong>
                     <CustomText
                       className="mb-3"
+                      type="number"
                       value={this.state.activeMutualFund.minimumBuy}
                       onChange={(e) =>
                         this.inputHandler(e, "minimumBuy", "activeMutualFund")
@@ -712,7 +732,23 @@ class ManagerMutualFund extends React.Component {
                   </div>
                 </div>
               </Tab>
-
+              <Tab eventKey="stock" title="Penjualan Terbatas">
+                <div className="row mt-3">
+                  <div className="col-lg-12">
+                    <strong className="text-muted small">
+                      Stok Unit (0 = tidak terbatas)
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      type="number"
+                      value={this.state.activeMutualFund.stock}
+                      onChange={(e) =>
+                        this.inputHandler(e, "stock", "activeMutualFund")
+                      }
+                    />
+                  </div>
+                </div>
+              </Tab>
               <Tab eventKey="document" title="Dokumen Reksadana">
                 <div className="row mt-3">
                   <div className="col-lg-6">
@@ -749,6 +785,23 @@ class ManagerMutualFund extends React.Component {
                         }
                       />
                     )}
+                  </div>
+                </div>
+              </Tab>
+              <Tab eventKey="price" title="Perbarui Harga">
+                <div className="row mt-3">
+                  <div className="col-lg-12">
+                    <strong className="text-muted small">
+                      Harga Unit Hari ini (Rp)
+                    </strong>
+                    <CustomText
+                      className="mb-3"
+                      type="number"
+                      value={this.state.activeMutualFund.lastPrice}
+                      onChange={(e) =>
+                        this.inputHandler(e, "lastPrice", "activeMutualFund")
+                      }
+                    />
                   </div>
                 </div>
               </Tab>

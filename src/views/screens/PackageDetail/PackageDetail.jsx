@@ -7,8 +7,9 @@ import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import { connect } from "react-redux";
 import Select from "react-select";
+import { Helmet } from "react-helmet";
 
-import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { PieChart, Pie, Tooltip } from "recharts";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -20,7 +21,7 @@ class PackageDetail extends React.Component {
       id: 0,
       packageName: "",
       description: "",
-      date: null,
+      date: "",
       percentageOne: 0,
       percentageTwo: 0,
       percentageThree: 0,
@@ -88,6 +89,7 @@ class PackageDetail extends React.Component {
         const errorMessage = err.response
           ? err.response.data.errors.join("\n")
           : err.message;
+        this.props.history.push("/");
         swal("Terjadi kesalahan!", errorMessage, "error");
       });
   };
@@ -138,7 +140,7 @@ class PackageDetail extends React.Component {
       bankName: this.state.bankAccount.name,
       totalPrice: this.state.totalBuy,
       member: {
-        id: 1,
+        id: this.props.user.id,
       },
     };
 
@@ -179,6 +181,9 @@ class PackageDetail extends React.Component {
   render() {
     return (
       <>
+        <Helmet>
+          <style>{"body { background: #f4f5f4 !important; }"}</style>
+        </Helmet>
         <div className="container-fluid p-0">
           <section className="d-flex align-items-center text-center header image">
             <div className="w-100 p-5">
@@ -243,7 +248,9 @@ class PackageDetail extends React.Component {
                             <tr>
                               <th scope="row">Tanggal Diluncurkan</th>
                               <td className="text-right">
-                                {this.state.mutualFundPackage.date}
+                                {this.state.mutualFundPackage.date
+                                  .split(".")[0]
+                                  .replace("T", " ")}
                               </td>
                             </tr>
                             <tr>

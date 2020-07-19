@@ -1,6 +1,4 @@
 import React from "react";
-import { Card } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import CustomButton from "../CustomButton/CustomButton";
 
 class TransactionCard extends React.Component {
@@ -14,19 +12,24 @@ class TransactionCard extends React.Component {
       totalPrice,
       transactionStatus,
     } = this.props.data;
+    const strDate = date.split(".")[0].replace("T", " ");
 
     return (
       <div className="card mt-3">
         <div className="card-body pt-2">
           <div className="row pb-3">
             <div className="col-lg-12">
-              <p className="text-muted small">{date}</p>
+              <p className="text-muted small">{strDate}</p>
             </div>
           </div>
           <div className="row">
             <div className="col-lg-2">
               <img
-                src={mutualFund.manager.logo}
+                src={
+                  mutualFund != null
+                    ? mutualFund.manager.logo
+                    : "https://cdn2.iconfinder.com/data/icons/flat-ui-icons-24-px/24/cross-24-512.png"
+                }
                 height="75"
                 width="75"
                 className="rounded-circle"
@@ -38,7 +41,15 @@ class TransactionCard extends React.Component {
             </div>
             <div className="col-lg-3">
               <p className="text-muted small">Nilai transaksi</p>
-              <strong>Rp {totalPrice}</strong>
+              <strong>
+                {new Intl.NumberFormat("id-ID", {
+                  style: "currency",
+                  currency: "IDR",
+                  minimumIntegerDigits: 1,
+                  maximumFractionDigits: 0,
+                  minimumFractionDigits: 0,
+                }).format(totalPrice)}
+              </strong>
             </div>
             <div className="col-lg-2">
               <p className="text-muted small">Nomor transaksi</p>

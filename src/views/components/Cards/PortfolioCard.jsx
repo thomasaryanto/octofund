@@ -36,14 +36,30 @@ class PortfolioCard extends React.Component {
                   <p className="pb-3">{totalUnit.toFixed(2)}</p>
 
                   <p className="text-muted small">Nilai semula</p>
-                  <p className="pb-3">Rp {totalInvest}</p>
+                  <p className="pb-3">
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumIntegerDigits: 1,
+                      maximumFractionDigits: 0,
+                      minimumFractionDigits: 0,
+                    }).format(totalInvest)}
+                  </p>
                 </div>
                 <div className="col-lg-4">
                   <p className="text-muted small">Harga / unit terkahir</p>
-                  <p className="pb-3">Rp {mutualFund.lastPrice}</p>
+                  <p className="pb-3">Rp {mutualFund.lastPrice.toFixed(2)}</p>
 
                   <p className="text-muted small">Nilai sekarang</p>
-                  <p className="pb-3">Rp {totalFund}</p>
+                  <p className="pb-3">
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumIntegerDigits: 1,
+                      maximumFractionDigits: 0,
+                      minimumFractionDigits: 0,
+                    }).format(totalFund)}
+                  </p>
                 </div>
                 <div className="col-lg-4">
                   <p className="text-muted small">Harga / unit rata-rata</p>
@@ -51,7 +67,13 @@ class PortfolioCard extends React.Component {
 
                   <p className="text-muted small">Imbal hasil</p>
                   <p className="pb-3">
-                    Rp {yields}
+                    {new Intl.NumberFormat("id-ID", {
+                      style: "currency",
+                      currency: "IDR",
+                      minimumIntegerDigits: 1,
+                      maximumFractionDigits: 0,
+                      minimumFractionDigits: 0,
+                    }).format(yields)}
                     <small>({percentYields}%)</small>
                   </p>
                 </div>
@@ -62,7 +84,7 @@ class PortfolioCard extends React.Component {
           <div className="float-right">
             <CustomButton
               type="contained"
-              className="small bg-primary borderless mr-2"
+              className="small mr-2"
               onClick={this.props.sellClick}
             >
               Jual

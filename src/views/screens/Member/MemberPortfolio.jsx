@@ -6,6 +6,7 @@ import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import Pagination from "react-js-pagination";
 import Select from "react-select";
+import { connect } from "react-redux";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -67,6 +68,7 @@ class MemberPortfolio extends React.Component {
       managerName: this.state.activePortfolio.mutualFund.manager.companyName,
       bankName: this.state.bankAccount.name,
       totalPrice: this.state.totalSell,
+      memberName: this.props.user.name,
       bankAccount: {
         ...this.state.bankAccount,
       },
@@ -74,7 +76,7 @@ class MemberPortfolio extends React.Component {
         id: this.state.activePortfolio.mutualFund.id,
       },
       member: {
-        id: 1,
+        id: this.props.user.id,
       },
     };
     Axios.post(`${API_URL}/transactions/sell`, transactionData)
@@ -96,7 +98,12 @@ class MemberPortfolio extends React.Component {
   };
 
   getPortfolioListData = (page) => {
-    Axios.get(`${API_URL}/portfolios/member/1?page=${page - 1}&size=2`)
+    Axios.get(`${API_URL}/portfolios/member/${this.props.user.id}`, {
+      params: {
+        page: page - 1,
+        size: 3,
+      },
+    })
       .then((res) => {
         const totalPages = res.data.totalPages;
         const itemsCountPerPage = res.data.size;
@@ -118,7 +125,7 @@ class MemberPortfolio extends React.Component {
   };
 
   getBankList = () => {
-    Axios.get(`${API_URL}/banks/accounts/user/1/all`)
+    Axios.get(`${API_URL}/banks/accounts/user/${this.props.user.id}/all`)
       .then((res) => {
         this.setState({
           bankList: res.data.map(({ id, bank, accountNumber }) => ({
@@ -216,7 +223,7 @@ class MemberPortfolio extends React.Component {
           <Modal.Body>
             <strong className="text-muted small">Jumlah Penjualan</strong>
             <CustomText
-              type="text"
+              type="number"
               value={this.state.totalSell}
               onChange={(e) => this.inputHandler(e, "totalSell")}
             />
@@ -247,4 +254,10 @@ class MemberPortfolio extends React.Component {
   }
 }
 
-export default MemberPortfolio;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(MemberPortfolio);

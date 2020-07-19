@@ -4,10 +4,10 @@ import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import DataTable from "react-data-table-component";
-import { PieChart, Pie, Cell, Tooltip } from "recharts";
+import { connect } from "react-redux";
 
 //components
-import AdminSideBar from "../../components/SideBar/AdminSideBar";
+import ManagerSideBar from "../../components/SideBar/ManagerSideBar";
 
 const columns = [
   {
@@ -32,12 +32,10 @@ const columns = [
   },
 ];
 
-class AdminReport extends React.Component {
+class ManagerReport extends React.Component {
   state = {
     topBuyProducts: [],
-    topBuyCharts: [],
     topSellProducts: [],
-    topSellCharts: [],
   };
 
   componentDidMount() {
@@ -46,11 +44,14 @@ class AdminReport extends React.Component {
   }
 
   getTopBuyProducts = (type) => {
-    Axios.get(`${API_URL}/mutualfund/statistics`, {
-      params: {
-        type,
-      },
-    })
+    Axios.get(
+      `${API_URL}/mutualfund/statistics/manager/${this.props.user.id}`,
+      {
+        params: {
+          type,
+        },
+      }
+    )
       .then((res) => {
         const topThree = [...res.data].slice(0, 3);
 
@@ -71,10 +72,6 @@ class AdminReport extends React.Component {
                 countTransaction: countTransaction + " kali",
               })
             ),
-            topBuyCharts: topThree.map(({ name, totalTransaction }) => ({
-              name,
-              value: totalTransaction,
-            })),
           });
         } else {
           this.setState({
@@ -93,10 +90,6 @@ class AdminReport extends React.Component {
                 countTransaction: countTransaction + " kali",
               })
             ),
-            topSellCharts: topThree.map(({ name, totalTransaction }) => ({
-              name,
-              value: totalTransaction,
-            })),
           });
         }
       })
@@ -115,60 +108,15 @@ class AdminReport extends React.Component {
       <div className="container-fluid image">
         <div className="w-100 p-5">
           <div className="row">
-            <AdminSideBar />
+            <ManagerSideBar />
             <div className="col-lg-9">
               <div className="card">
                 <div className="card-body">
                   <div className="row">
                     <div className="col-lg-12">
-                      <h3>Statistik Produk</h3>
+                      <h3>Statistik Reksadana</h3>
                     </div>
                   </div>
-
-                  <div className="row">
-                    <div className="col-lg-12">
-                      <div className="row">
-                        <div className="col-lg-6 p-3">
-                          <div class="card h-100">
-                            <div class="card-header">
-                              <p>Top 3 Pembelian Terbanyak</p>
-                            </div>
-                            <div className="card-body text-center d-flex align-items-center justify-content-center">
-                              <PieChart width={200} height={200}>
-                                <Pie
-                                  dataKey="value"
-                                  data={this.state.topBuyCharts}
-                                  outerRadius={100}
-                                  fill="#007BFF"
-                                />
-                                <Tooltip />
-                              </PieChart>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="col-lg-6 p-3">
-                          <div class="card h-100">
-                            <div class="card-header">
-                              <p>Top 3 Penjualan Terbanyak</p>
-                            </div>
-                            <div className="card-body text-center d-flex align-items-center justify-content-center">
-                              <PieChart width={200} height={200}>
-                                <Pie
-                                  dataKey="value"
-                                  data={this.state.topSellCharts}
-                                  outerRadius={100}
-                                  fill="#FA5E6B"
-                                />
-                                <Tooltip />
-                              </PieChart>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="row">
                     <div className="col-lg-12">
                       <div class="card h-100">
@@ -210,4 +158,10 @@ class AdminReport extends React.Component {
   }
 }
 
-export default AdminReport;
+const mapStateToProps = (state) => {
+  return {
+    user: state.user,
+  };
+};
+
+export default connect(mapStateToProps)(ManagerReport);

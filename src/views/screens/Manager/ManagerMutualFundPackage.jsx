@@ -10,7 +10,7 @@ import { connect } from "react-redux";
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
-import UserCard from "../../components/Cards/UserCard";
+import ListCard from "../../components/Cards/ListCard";
 import ManagerSideBar from "../../components/SideBar/ManagerSideBar";
 
 const mutualFundPackageFormInit = {
@@ -89,7 +89,7 @@ class ManagerMutualFundPackage extends React.Component {
     Axios.get(
       `${API_URL}/packages/manager/${this.props.user.id}?page=${
         page - 1
-      }&size=2`
+      }&size=4`
     )
       .then((res) => {
         const totalPages = res.data.totalPages;
@@ -147,22 +147,23 @@ class ManagerMutualFundPackage extends React.Component {
   };
 
   renderMutualFundPackages = () => {
-    return this.state.mutualFundPackageData.map(({ id, packageName }) => {
-      return (
-        <UserCard
-          image="testing"
-          textTop="testing"
-          textMiddle={packageName}
-          textBottom="testing"
-          editClick={() => {
-            this.editBtnHandler(id);
-          }}
-          deleteClick={() => {
-            this.deleteBtnHandler(id);
-          }}
-        />
-      );
-    });
+    return this.state.mutualFundPackageData.map(
+      ({ id, packageName, manager }) => {
+        return (
+          <ListCard
+            image={manager.logo}
+            textMiddle={packageName}
+            textBottom={manager.companyName}
+            editClick={() => {
+              this.editBtnHandler(id);
+            }}
+            deleteClick={() => {
+              this.deleteBtnHandler(id);
+            }}
+          />
+        );
+      }
+    );
   };
 
   editDataToggle = () => {
@@ -401,6 +402,7 @@ class ManagerMutualFundPackage extends React.Component {
                 </strong>
                 <CustomText
                   className="mb-3"
+                  type="number"
                   value={this.state.mutualFundPackageForm.percentageOne}
                   onChange={(e) =>
                     this.inputHandler(
@@ -416,6 +418,7 @@ class ManagerMutualFundPackage extends React.Component {
                 </strong>
                 <CustomText
                   className="mb-3"
+                  type="number"
                   value={this.state.mutualFundPackageForm.percentageTwo}
                   onChange={(e) =>
                     this.inputHandler(
@@ -431,6 +434,7 @@ class ManagerMutualFundPackage extends React.Component {
                 </strong>
                 <CustomText
                   className="mb-3"
+                  type="number"
                   value={this.state.mutualFundPackageForm.percentageThree}
                   onChange={(e) =>
                     this.inputHandler(
@@ -553,6 +557,7 @@ class ManagerMutualFundPackage extends React.Component {
                 </strong>
                 <CustomText
                   className="mb-3"
+                  type="number"
                   value={this.state.activeMutualFundPackage.percentageOne}
                   onChange={(e) =>
                     this.inputHandler(
@@ -568,6 +573,7 @@ class ManagerMutualFundPackage extends React.Component {
                 </strong>
                 <CustomText
                   className="mb-3"
+                  type="number"
                   value={this.state.activeMutualFundPackage.percentageTwo}
                   onChange={(e) =>
                     this.inputHandler(
@@ -583,6 +589,7 @@ class ManagerMutualFundPackage extends React.Component {
                 </strong>
                 <CustomText
                   className="mb-3"
+                  type="number"
                   value={this.state.activeMutualFundPackage.percentageThree}
                   onChange={(e) =>
                     this.inputHandler(

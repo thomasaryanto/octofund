@@ -6,6 +6,7 @@ const init_state = {
   email: "",
   username: "",
   kyc: false,
+  rejected: false,
   msg: "",
   cookieChecked: false,
 };
@@ -13,13 +14,14 @@ const init_state = {
 export default (state = init_state, action) => {
   switch (action.type) {
     case "ON_LOGIN_SUCCESS":
-      const { id, role, name, kyc, member, manager } = action.payload;
+      const { id, role, name, kyc, rejected, member, manager } = action.payload;
       return {
         ...state,
         id,
         role,
         name,
         kyc,
+        rejected,
         member,
         manager,
         msg: "",

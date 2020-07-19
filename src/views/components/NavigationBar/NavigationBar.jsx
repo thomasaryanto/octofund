@@ -1,6 +1,6 @@
 //libraries
 import React from "react";
-import { Navbar, Nav, NavDropdown } from "react-bootstrap";
+import { Navbar, Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { connect } from "react-redux";
 import { logoutHandler } from "../../../redux/actions";
@@ -39,19 +39,19 @@ class NavigationBar extends React.Component {
 
                 {this.props.user.role.id == 1 ? (
                   <LinkContainer to="/admin">
-                    <Nav.Link>Dasboard</Nav.Link>
+                    <Nav.Link>Dashboard</Nav.Link>
                   </LinkContainer>
                 ) : null}
 
                 {this.props.user.role.id == 2 ? (
                   <LinkContainer to="/manager">
-                    <Nav.Link>Dasboard</Nav.Link>
+                    <Nav.Link>Dashboard</Nav.Link>
                   </LinkContainer>
                 ) : null}
 
                 {this.props.user.role.id == 3 ? (
                   <LinkContainer to="/member">
-                    <Nav.Link>Dasboard</Nav.Link>
+                    <Nav.Link>Dashboard</Nav.Link>
                   </LinkContainer>
                 ) : null}
 

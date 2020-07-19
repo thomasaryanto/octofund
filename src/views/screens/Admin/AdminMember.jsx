@@ -5,14 +5,15 @@ import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import Pagination from "react-js-pagination";
+// You need to import the CSS only once
+import "react-awesome-lightbox/build/style.css";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
-import CustomText from "../../components/CustomText/CustomText";
 import ListCard from "../../components/Cards/ListCard";
 import AdminSideBar from "../../components/SideBar/AdminSideBar";
 
-class AdminKyc extends React.Component {
+class AdminMember extends React.Component {
   state = {
     userData: [],
     userDataShow: false,
@@ -51,7 +52,12 @@ class AdminKyc extends React.Component {
   };
 
   getUserListData = (page) => {
-    Axios.get(`${API_URL}/users/kyc?page=${page - 1}&size=4`)
+    Axios.get(`${API_URL}/users/role/3`, {
+      params: {
+        page: page - 1,
+        size: 4,
+      },
+    })
       .then((res) => {
         const totalPages = res.data.totalPages;
         const itemsCountPerPage = res.data.size;
@@ -91,9 +97,12 @@ class AdminKyc extends React.Component {
           textTop={member.identityNumber}
           textMiddle={name}
           textBottom={email}
-          editText="Proses"
+          editText="Detail"
           editClick={() => {
-            this.proccessBtnHandler(id);
+            this.detailBtnHandler(id);
+          }}
+          deleteClick={() => {
+            this.deleteBtnHandler(id);
           }}
         />
       );
@@ -105,81 +114,37 @@ class AdminKyc extends React.Component {
     this.setState({ userDataShow: !this.state.userDataShow });
   };
 
-  acceptUserToggle = () => {
-    this.setState({ acceptUserShow: !this.state.acceptUserShow });
-  };
-
-  rejectUserToggle = () => {
-    this.setState({ rejectUserShow: !this.state.rejectUserShow });
-  };
-
-  proccessBtnHandler = (id) => {
+  detailBtnHandler = (id) => {
     this.getUserData(id);
     this.userDataToggle();
   };
 
-  acceptBtnHandler = () => {
-    if (this.state.sid == "" || this.state.ifua == "") {
-      return swal("Terjadi kesalahan!", "SID dan IFUA harus diisi!", "error");
-    }
-    const userData = {
-      id: this.state.activeUser.id,
-      member: {
-        sid: this.state.sid,
-        ifua: this.state.ifua,
-      },
-    };
-
-    Axios.post(`${API_URL}/users/kyc/accept`, userData)
-      .then((res) => {
-        swal("Berhasil!", res.data, "success");
-        this.setState({
-          sid: "",
-          ifua: "",
-        });
-        this.acceptUserToggle();
-        this.getUserListData();
-      })
-      .catch((err) => {
-        const errorMessage = err.response
-          ? err.response.data.errors.join("\n")
-          : err.message;
-        swal("Terjadi kesalahan!", errorMessage, "error");
-      });
-  };
-
-  rejectBtnHandler = () => {
-    if (this.state.rejectMsg == "") {
-      return swal(
-        "Terjadi kesalahan!",
-        "Alasan penolakan harus diisi!",
-        "error"
-      );
-    }
-
-    const userData = {
-      id: this.state.activeUser.id,
-    };
-
-    Axios.post(`${API_URL}/users/kyc/reject`, userData, {
-      params: {
-        msg: this.state.rejectMsg,
-      },
-    })
-      .then((res) => {
-        swal("Berhasil!", res.data, "success");
-        this.setState({
-          rejectMsg: "",
-        });
-        this.rejectUserToggle();
-        this.getUserListData();
-      })
-      .catch((err) => {
-        const errorMessage = err.response
-          ? err.response.data.errors.join("\n")
-          : err.message;
-        swal("Terjadi kesalahan!", errorMessage, "error");
-      });
+  deleteBtnHandler = (id) => {
+    swal({
+      title: "Danger Zone!",
+      text: "Kamu yakin akan menghapus data ini?",
+      icon: "warning",
+      buttons: true,
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        Axios.delete(`${API_URL}/users/${id}`)
+          .then((res) => {
+            swal("Data berhasil dihapus!", {
+              icon: "success",
+            });
+            this.getUserListData(this.state.activePage);
+          })
+          .catch((err) => {
+            const errorMessage = err.response
+              ? err.response.data.errors.join("\n")
+              : err.message;
+            swal("Terjadi kesalahan!", errorMessage, "error");
+          });
+      } else {
+        swal("Data batal dihapus!");
+      }
+    });
   };
 
   render() {
@@ -193,7 +158,7 @@ class AdminKyc extends React.Component {
                 <div className="card">
                   <div className="card-body">
                     <h3>
-                      E-KYC Nasabah{" "}
+                      Manajemen Nasabah{" "}
                       <span class="badge badge-pill badge-primary">
                         {this.state.totalItemsCount}
                       </span>
@@ -305,8 +270,10 @@ class AdminKyc extends React.Component {
                   </div>
                 </div>
               </Tab>
+
               <Tab eventKey="photo" title="Berkas Pendukung">
                 <br />
+
                 <div className="row">
                   <div className="col-lg-4">
                     <strong className="text-muted small">Foto KTP</strong>
@@ -376,68 +343,9 @@ class AdminKyc extends React.Component {
             </CustomButton>
           </Modal.Footer>
         </Modal>
-
-        <Modal show={this.state.rejectUserShow} onHide={this.rejectUserToggle}>
-          <Modal.Header closeButton>
-            <Modal.Title>Tolak Nasabah</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            <CustomText
-              placeholder="Alasan penolakan"
-              type="text"
-              value={this.state.rejectMsg}
-              onChange={(e) => this.inputHandler(e, "rejectMsg")}
-            />
-          </Modal.Body>
-
-          <Modal.Footer>
-            <CustomButton
-              type="contained"
-              className="text-center ml-2"
-              onClick={this.rejectBtnHandler}
-            >
-              Tolak
-            </CustomButton>
-          </Modal.Footer>
-        </Modal>
-
-        <Modal show={this.state.acceptUserShow} onHide={this.acceptUserToggle}>
-          <Modal.Header closeButton>
-            <Modal.Title>Terima Nasabah</Modal.Title>
-          </Modal.Header>
-
-          <Modal.Body>
-            <p>Masukan SID & IFUA dari KSEI</p>
-            <hr />
-            <CustomText
-              placeholder="SID (Single Investor Identification)"
-              type="number"
-              value={this.state.sid}
-              onChange={(e) => this.inputHandler(e, "sid")}
-            />
-            <CustomText
-              placeholder="IFUA (Investor Fund Unit Account)"
-              type="number"
-              className="mt-3"
-              value={this.state.ifua}
-              onChange={(e) => this.inputHandler(e, "ifua")}
-            />
-          </Modal.Body>
-
-          <Modal.Footer>
-            <CustomButton
-              type="contained"
-              className="bg-primary borderless"
-              onClick={this.acceptBtnHandler}
-            >
-              Terima
-            </CustomButton>
-          </Modal.Footer>
-        </Modal>
       </>
     );
   }
 }
 
-export default AdminKyc;
+export default AdminMember;

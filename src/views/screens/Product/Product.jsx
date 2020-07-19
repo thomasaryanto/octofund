@@ -4,8 +4,9 @@ import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
 import Pagination from "react-js-pagination";
-import { Nav, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import Select from "react-select";
+import { Helmet } from "react-helmet";
 
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
@@ -203,7 +204,7 @@ class Product extends React.Component {
     Axios.get(`${API_URL}/mutualfund`, {
       params: {
         page: page - 1,
-        size: 2,
+        size: 6,
         filterKey: filterKey,
         filterValue: filterValue,
         sortKey: sortKey,
@@ -239,6 +240,9 @@ class Product extends React.Component {
   render() {
     return (
       <>
+        <Helmet>
+          <style>{"body { background: #f4f5f4 !important; }"}</style>
+        </Helmet>
         <div className="container-fluid p-0">
           <section className="d-flex align-items-center text-center header image">
             <div className="w-100 p-5">
@@ -322,7 +326,6 @@ class Product extends React.Component {
             </div>
           </section>
         </div>
-
         {/* sort modal */}
         <Modal show={this.state.sortShow} onHide={this.sortToggle}>
           <Modal.Header closeButton>

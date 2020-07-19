@@ -26,6 +26,16 @@ html {
 
 body {
   font-family: Work Sans, Arial, sans-serif !important;
+  background: linear-gradient(rgba(255, 0, 0, 0.45), rgba(255, 0, 0, 0.45)),
+    url(assets/images/bg.png);
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.body-plain {
+  font-family: Work Sans, Arial, sans-serif !important;
   background-color: #f4f5f4 !important;
 }
 

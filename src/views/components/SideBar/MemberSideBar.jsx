@@ -1,5 +1,4 @@
 import React from "react";
-import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import CustomButton from "../CustomButton/CustomButton";
 import Axios from "axios";
@@ -28,13 +27,15 @@ class MemberSideBar extends React.Component {
           nowInvestment = nowInvestment + totalUnit * mutualFund.lastPrice;
         });
 
+        let percentYields =
+          ((nowInvestment - totalInvestment) / totalInvestment) * 100;
+
         this.setState({
           totalInvestment: nowInvestment,
           totalYields: nowInvestment - totalInvestment,
-          percentYields: (
-            ((nowInvestment - totalInvestment) / totalInvestment) *
-            100
-          ).toFixed(2),
+          percentYields: Number.isNaN(percentYields)
+            ? 0
+            : percentYields.toFixed(2),
         });
       })
       .catch((err) => {
@@ -59,10 +60,24 @@ class MemberSideBar extends React.Component {
             <h5 className="text-center pt-2">{this.props.user.name}</h5>
             <hr />
             <p className=" text-muted">Total investasi</p>
-            <h5>Rp.{this.state.totalInvestment}</h5>
+            <h5>
+              {new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumIntegerDigits: 1,
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0,
+              }).format(this.state.totalInvestment)}
+            </h5>
             <p className="pt-2 text-muted">Total imbal hasil</p>
             <h5 className="pb-2">
-              Rp.{this.state.totalYields}{" "}
+              {new Intl.NumberFormat("id-ID", {
+                style: "currency",
+                currency: "IDR",
+                minimumIntegerDigits: 1,
+                maximumFractionDigits: 0,
+                minimumFractionDigits: 0,
+              }).format(this.state.totalYields)}{" "}
               <small>({this.state.percentYields}%)</small>
             </h5>
 

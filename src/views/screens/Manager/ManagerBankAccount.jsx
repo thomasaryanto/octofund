@@ -1,6 +1,6 @@
 //libraries
 import React from "react";
-import { Modal, Card, Tabs, Tab } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
@@ -11,7 +11,7 @@ import { connect } from "react-redux";
 //components
 import CustomButton from "../../components/CustomButton/CustomButton";
 import CustomText from "../../components/CustomText/CustomText";
-import UserCard from "../../components/Cards/UserCard";
+import ListCard from "../../components/Cards/ListCard";
 import ManagerSideBar from "../../components/SideBar/ManagerSideBar";
 
 const bankAccountFormInit = {
@@ -102,7 +102,7 @@ class ManagerBankAccount extends React.Component {
     Axios.get(
       `${API_URL}/banks/accounts/user/${this.props.user.id}?page=${
         page - 1
-      }&size=2`
+      }&size=4`
     )
       .then((res) => {
         const totalPages = res.data.totalPages;
@@ -145,7 +145,7 @@ class ManagerBankAccount extends React.Component {
     return this.state.bankAccountData.map(
       ({ id, accountNumber, holderName, bank }) => {
         return (
-          <UserCard
+          <ListCard
             image={bank.logo}
             textTop={bank.name}
             textMiddle={holderName}
@@ -257,7 +257,7 @@ class ManagerBankAccount extends React.Component {
                     <div className="row">
                       <div className="col-lg-10">
                         <h3>
-                          Manajemen No Rekening{" "}
+                          Manajemen Rekening{" "}
                           <span class="badge badge-pill badge-primary">
                             {this.state.totalItemsCount}
                           </span>
@@ -310,7 +310,7 @@ class ManagerBankAccount extends React.Component {
           onHide={this.addDataToggle}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Tambah No Rekening</Modal.Title>
+            <Modal.Title>Tambah Rekening</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
@@ -319,6 +319,7 @@ class ManagerBankAccount extends React.Component {
                 <strong className="text-muted small">No Rekening</strong>
                 <CustomText
                   className="mb-3"
+                  type="number"
                   value={this.state.bankAccountForm.accountNumber}
                   onChange={(e) =>
                     this.inputHandler(e, "accountNumber", "bankAccountForm")
@@ -369,7 +370,7 @@ class ManagerBankAccount extends React.Component {
           onHide={this.editDataToggle}
         >
           <Modal.Header closeButton>
-            <Modal.Title>Sunting No Rekening</Modal.Title>
+            <Modal.Title>Sunting Rekening</Modal.Title>
           </Modal.Header>
 
           <Modal.Body>
@@ -378,6 +379,7 @@ class ManagerBankAccount extends React.Component {
                 <strong className="text-muted small">No Rekening</strong>
                 <CustomText
                   className="mb-3"
+                  type="number"
                   value={this.state.activeBankAccount.accountNumber}
                   onChange={(e) =>
                     this.inputHandler(e, "accountNumber", "activeBankAccount")

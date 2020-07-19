@@ -1,26 +1,20 @@
 import React from "react";
-import { Card } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import CustomButton from "../CustomButton/CustomButton";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from "recharts";
+import { AreaChart, Area } from "recharts";
 
 class ProductCard extends React.Component {
   render() {
     const { id, name, lastPrice, manager, priceHistory } = this.props.data;
-    console.log(priceHistory[0] - priceHistory[1]);
-    const priceChart = [...priceHistory].reverse();
-    const percentYields = (
-      ((priceHistory[0].price - priceHistory[1].price) /
-        priceHistory[0].price) *
-      100
-    ).toFixed(2);
+    const priceChart = [...priceHistory];
+    console.log(priceHistory);
+    const percentYields = Math.abs(
+      (
+        ((priceHistory[priceHistory.length - 2].price -
+          priceHistory[priceHistory.length - 1].price) /
+          priceHistory[priceHistory.length - 2].price) *
+        100
+      ).toFixed(2)
+    );
     return (
       <div className="col-lg-4 p-3">
         <div class="card shadow">
@@ -46,12 +40,16 @@ class ProductCard extends React.Component {
                     type="monotone"
                     dataKey="price"
                     stroke={
-                      priceHistory[0].price - priceHistory[1].price >= 0
+                      priceHistory[priceHistory.length - 2].price -
+                        priceHistory[priceHistory.length - 1].price <=
+                      0
                         ? "#86b783"
                         : "#ab5d4c"
                     }
                     fill={
-                      priceHistory[0].price - priceHistory[1].price >= 0
+                      priceHistory[priceHistory.length - 2].price -
+                        priceHistory[priceHistory.length - 1].price <=
+                      0
                         ? "#86b783"
                         : "#ab5d4c"
                     }
@@ -61,10 +59,12 @@ class ProductCard extends React.Component {
               <div className="col-lg-5 d-flex pt-4 pt-lg-0">
                 <div className="ml-lg-auto">
                   <h5>Rp {lastPrice}</h5>
-                  {priceHistory[0].price - priceHistory[1].price >= 0 ? (
+                  {priceHistory[priceHistory.length - 2].price -
+                    priceHistory[priceHistory.length - 1].price <=
+                  0 ? (
                     <p className="small text-success">+{percentYields}%</p>
                   ) : (
-                    <p className="small text-danger">{percentYields}%</p>
+                    <p className="small text-danger">-{percentYields}%</p>
                   )}
                 </div>
               </div>

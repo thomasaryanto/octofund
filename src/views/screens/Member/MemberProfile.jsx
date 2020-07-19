@@ -1,6 +1,6 @@
 //libraries
 import React from "react";
-import { Accordion, Card, Tabs, Tab, Modal } from "react-bootstrap";
+import { Tabs, Tab, Modal } from "react-bootstrap";
 import swal from "sweetalert";
 import Axios from "axios";
 import { API_URL } from "../../../constants/API";
@@ -114,6 +114,24 @@ class MemberProfile extends React.Component {
       });
   };
 
+  forgotPasswordBtnHandler = () => {
+    const userData = {
+      email: this.state.userData.email,
+    };
+    Axios.post(`${API_URL}/users/forgot`, userData)
+      .then((res) => {
+        swal("Berhasil!", res.data, "success");
+      })
+      .catch((err) => {
+        console.log(err);
+        const errorMessage = err.response
+          ? err.response.data.errors.join("\n")
+          : err.message;
+
+        swal("Terjadi kesalahan!", errorMessage, "error");
+      });
+  };
+
   render() {
     return (
       <>
@@ -125,6 +143,19 @@ class MemberProfile extends React.Component {
               <div className="col-lg-9">
                 <div className="card">
                   <div className="card-body">
+                    {this.props.user.rejected ? (
+                      <div className="row">
+                        <div className="col-lg-12">
+                          <div
+                            class="alert alert-danger text-center"
+                            role="alert"
+                          >
+                            Verifikasi data diri ditolak. Harap membenahi
+                            kesalahan data yang sudah kami kirim melalui email.
+                          </div>
+                        </div>
+                      </div>
+                    ) : null}
                     <div className="card">
                       <div class="card-header">
                         <p>Data Diri Nasabah</p>
@@ -166,13 +197,6 @@ class MemberProfile extends React.Component {
                             <p className="pb-3">{this.state.userData.email}</p>
 
                             <strong className="text-muted small">
-                              Tempat Lahir
-                            </strong>
-                            <p className="pb-3">
-                              {this.state.userData.member.birthPlace}
-                            </p>
-
-                            <strong className="text-muted small">
                               Jenis Kelamin
                             </strong>
                             <p className="pb-3">
@@ -191,13 +215,6 @@ class MemberProfile extends React.Component {
                               No. Ponsel
                             </strong>
                             <p className="pb-3">{this.state.userData.phone}</p>
-
-                            <strong className="text-muted small">
-                              Tanggal Lahir
-                            </strong>
-                            <p className="pb-3">
-                              {this.state.userData.member.birthDate}
-                            </p>
 
                             <strong className="text-muted small">Alamat</strong>
                             <p className="pb-3">
@@ -272,6 +289,7 @@ class MemberProfile extends React.Component {
                     <strong className="text-muted small">No Telepon</strong>
                     <CustomText
                       className="mb-3"
+                      type="number"
                       value={this.state.userData.phone}
                       onChange={(e) =>
                         this.inputHandler(e, "phone", "userData")
@@ -293,34 +311,6 @@ class MemberProfile extends React.Component {
                     />
                   </div>
                   <div className="col-lg-6">
-                    <strong className="text-muted small">Tempat Lahir</strong>
-                    <CustomText
-                      className="mb-3"
-                      value={this.state.userData.member.birthPlace}
-                      onChange={(e) =>
-                        this.inputNestedHandler(
-                          e,
-                          "birthPlace",
-                          "member",
-                          "userData"
-                        )
-                      }
-                    />
-
-                    <strong className="text-muted small">Tanggal Lahir</strong>
-                    <CustomText
-                      className="mb-3"
-                      value={this.state.userData.member.birthDate}
-                      onChange={(e) =>
-                        this.inputNestedHandler(
-                          e,
-                          "birthDate",
-                          "member",
-                          "userData"
-                        )
-                      }
-                    />
-
                     <strong className="text-muted small">Jenis Kelamin</strong>
                     <CustomText
                       className="mb-3"
@@ -378,7 +368,11 @@ class MemberProfile extends React.Component {
                 <div className="row mt-3">
                   <div className="col-lg-12">
                     <strong className="text-muted small">
-                      Kata Sandi Lama
+                      Kata Sandi Lama (
+                      <a href="#forgot" onClick={this.forgotPasswordBtnHandler}>
+                        Lupa Password?
+                      </a>
+                      )
                     </strong>
                     <CustomText
                       className="mb-3"
